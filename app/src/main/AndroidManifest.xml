@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.android.push_chinese">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Push Chinese"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".NotificationsGuide" android:label="@string/title_activity_notifications_guide"/>
+        <activity android:name=".OpenSource"  android:label="@string/title_activity_open_source" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="Settings" />
+        <activity android:name=".EntryPoint">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Onboarding" />
+        <activity android:name=".MainActivity" />
+
+        <provider
+            android:name=".data.PushProvider"
+            android:authorities="com.example.android.push_chinese"
+            android:exported="false" />
+    </application>
+
+</manifest>

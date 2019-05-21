@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="NewWordsNumber">
+        <item>Relaxed - 5 new words</item>
+        <item>Normal - 10 new words</item>
+        <item>Serious - 15 new words</item>
+        <item>Hard - 20 new words</item>
+        <item>Intense - 30 new words</item>
+    </string-array>
+    <string-array name="NewWordsNumberData">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+    </string-array>
+    <string-array name="Level">
+        <item>Beginner \ HSK 1</item>
+        <item>Basic \ HSK 2</item>
+        <item>Lower Intermediate\ HSK 3</item>
+        <item>Intermediate \ HSK 4</item>
+        <item>Upper intermediate \ HSK 5</item>
+        <item>Advanced \ HSK 6</item>
+    </string-array>
+    <string-array name="LevelData">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+</resources>
