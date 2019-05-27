@@ -2,10 +2,7 @@ package com.example.android.push_chinese;
 
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.PopupMenu;
@@ -13,31 +10,23 @@ import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.example.android.push_chinese.expandable_section.ExpandableSection;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-
-import static com.example.android.push_chinese.data.PushDbContract.Vocabulary;
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
+public class PracticeFragment extends Fragment {
 
     ContentResolver resolver;
     View rootView;
@@ -45,6 +34,7 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
     FloatingActionsMenu revele;
     WordPracticeBoard wordPracticeBoard;
     SRScheduler scheduler;
+    SharedPreferences preferences;
 
     LinearLayout word_container;
     public PracticeFragment() {
@@ -65,36 +55,30 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
     }
 
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.skip_word:
-                practiceAnotherWord();
-                revele.collapse();
-                return true;
-            case R.id.butty_word:
-                buryWord();
-                revele.collapse();
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         rootView = inflater.inflate(R.layout.practice, container, false);
         resolver = getContext().getContentResolver();
-        scheduler = new SRScheduler(getContext());
+        scheduler = ((SRScheduler.SRSchedulerInterface) getContext()).getSRScheduler();
 
         word_container = rootView.findViewById(R.id.word_container);
 
-        rootView.findViewById(R.id.contextualMenuButton).setOnClickListener(new View.OnClickListener() {
+        // TODO: need to hide this buttons when run out of words
+        rootView.findViewById(R.id.bury_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openContextualMenu(view);
+                buryWord();
+                revele.collapse();
+            }
+        });
+
+        rootView.findViewById(R.id.skip_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                practiceAnotherWord();
+                revele.collapse();
             }
         });
 
@@ -102,7 +86,8 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
         revele.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
-
+                // TODO: expand all the word sections
+                Log.w("MENU OPENED", "TODO: expand all the word sections");
             }
 
             @Override
@@ -114,7 +99,7 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
         ((FloatingActionButton) rootView.findViewById(R.id.practice_easy)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scheduler.reschreduleWord(currentWord, SRScheduler.EASY);
+                scheduler.rescheduleWord(currentWord, Word.EASY);
                 practiceAnotherWord();
                 revele.collapse();
             }
@@ -123,7 +108,7 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
         ((FloatingActionButton) rootView.findViewById(R.id.practice_normal)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scheduler.reschreduleWord(currentWord, SRScheduler.NORMAL);
+                scheduler.rescheduleWord(currentWord, Word.NORMAL);
                 practiceAnotherWord();
                 revele.collapse();
             }
@@ -132,7 +117,7 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
         ((FloatingActionButton) rootView.findViewById(R.id.practice_hard)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scheduler.reschreduleWord(currentWord, SRScheduler.HARD);
+                scheduler.rescheduleWord(currentWord, Word.HARD);
                 practiceAnotherWord();
                 revele.collapse();
             }
@@ -141,7 +126,7 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
         wordPracticeBoard = new WordPracticeBoard(getContext(), word_container);
 
         Word practicingWord;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         if (preferences.contains("practicingWordId")) {
             Long practicingWordId = preferences.getLong("practicingWordId", 0);
             practicingWord = Word.from_id(getContext(), practicingWordId);
@@ -155,19 +140,10 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
 
     private void buryWord() {
         if (currentWord != null) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(Vocabulary.COLUMN_BURIED, Vocabulary.BURIED);
-            resolver.update(Uri.parse(Vocabulary.CONTENT_URI + "/" + String.valueOf(currentWord.getId())),
-                    contentValues,
-                    null,
-                    null);
+            currentWord.bury(true);
+            currentWord.persist(getContext());
             practiceAnotherWord();
         }
-    }
-
-    private void blankState() {
-        currentWord = null;
-        word_container.removeAllViews();
     }
 
     private void practiceAnotherWord() {
@@ -178,13 +154,15 @@ public class PracticeFragment extends Fragment implements PopupMenu.OnMenuItemCl
     public void practiceWord(Word word, boolean animated) {
         if (word != null) {
             currentWord = word;
+            revele.setEnabled(true);
             PreferenceManager.getDefaultSharedPreferences(getContext())
                     .edit().putLong("practicingWordId",currentWord.getId()).apply();
             wordPracticeBoard.changeWord(currentWord, animated);
         } else {
-            // TODO: should change to empty view
-            Toast.makeText(getContext(), "No more words to learn", Toast.LENGTH_SHORT).show();
-            blankState();
+            wordPracticeBoard.emptyPractice();
+            revele.setEnabled(false);
+            preferences.edit().remove("practicingWordId").apply();
+
         }
     }
 }

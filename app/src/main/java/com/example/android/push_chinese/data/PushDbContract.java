@@ -30,18 +30,25 @@ public class PushDbContract {
         public static final String COLUMN_LEVEL = "level";
         public static final String COLUMN_AUDIO = "audio";
         public static final String COLUMN_IMAGE = "image";
-        public static final String COLUMN_DIFFICULTY = "difficulty";
+        public static final String COLUMN_SCHEDULE_FOR = "scheduled";
         public static final String COLUMN_BURIED = "buried";
+        public static final String COLUMN_EASY = "easy";
+        public static final String COLUMN_NORMAL = "normal";
+        public static final String COLUMN_HARD = "hard";
+        public static final String COLUMN_LEARNING_STAGE = "learning_stage";
 
-        // For assigning to difficulty
-        public static final int UNKNOWN = 0;
-        public static final int EASY = 1;
-        public static final int NORMAL = 2;
-        public static final int DIFFICULT = 3;
+        //
+        public final static int NOT_BURIED = 0;
+        public final static int BURIED = 1;
 
-        // For assigning to BURRY
-        public static final int NOT_BURIED = 0;
-        public static final int BURIED = 1;
+        // For assigning to LEARNING_STAGE
+        public final static int TO_PRESENT = 0;
+        public final static int SHOW_HEAD_WORD = 1;
+        public final static int SHOW_PRONUNCIATION = 2;
+        public final static int SHOW_TRANSLATION = 3;
+        public final static int SHOW_IMAGE = 4;
+        public final static int LEARNED = 5;
+
 
     }
 

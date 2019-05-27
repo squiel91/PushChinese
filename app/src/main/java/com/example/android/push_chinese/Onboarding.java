@@ -297,7 +297,7 @@ public class Onboarding  extends AppCompatActivity {
                 ArrayList<Word> word_list = extractWordsFromJson(jsonResponse);
                 ArrayList<Object> objectList = new ArrayList<>();
                 for (Word currentWord : word_list) {
-                    currentWord.persist(activity_context);
+                    currentWord.store(activity_context);
                     objectList.add(currentWord);
                 }
                 // Return the {@link Event} object as the result fo the {@link VocabularyAsyncTask}

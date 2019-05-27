@@ -21,12 +21,30 @@ public class Word {
     private String[] measures;
     private Integer level;
     private Long[] examples;
-
-    private int difficulty = 0;
-    private boolean buried = false;
     private Boolean image;
     private Boolean audio;
+
+    private int easy_responses;
+    private int normal_responses;
+    private int hard_responses;
+    private int learningStage;
+    private boolean buried = false;
+
     private Uri word_uri = null;
+
+    public final static int EASY = 0;
+    public final static int NORMAL = 1;
+    public final static int HARD = 2;
+
+    private int scheduledTo;
+
+    // For assigning to LEARNING_STAGE
+    public final static int TO_PRESENT = 0;
+    public final static int SHOW_HEAD_WORD = 1;
+    public final static int SHOW_PRONUNCIATION = 2;
+    public final static int SHOW_TRANSLATION = 3;
+    public final static int SHOW_IMAGE = 4;
+    public final static int LEARNED = 5;
 
     public Word (Long id, String headWord, String pronunciation, String[] translations, String[] measures, Long[] examples,  Integer level, Boolean image, Boolean audio) {
         this.id = id;
@@ -81,7 +99,7 @@ public class Word {
             measures = new String[0];
         }
 
-        return new Word(
+        Word newWord = new Word(
                 cursor.getLong(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_ID)),
                 cursor.getString(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_HEAD_WORD)),
                 cursor.getString(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION)),
@@ -92,6 +110,15 @@ public class Word {
                 cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_AUDIO)) == 1,
                 cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_IMAGE))  == 1
         );
+
+        newWord.scheduledTo = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR));
+        newWord.buried = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_BURIED)) == 1;
+        newWord.easy_responses = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_EASY));
+        newWord.normal_responses = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_NORMAL));
+        newWord.hard_responses = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_HARD));
+        newWord.learningStage = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE));
+
+        return newWord;
     }
 
     static private String getTonal(JSONObject jsonObject) {
@@ -200,12 +227,55 @@ public class Word {
         return level;
     }
 
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
+    public int moveToNextStage() {
+        learningStage = nextStage();
+        return learningStage;
+    }
+
+
+    public int nextStage() {
+        int nextStage = getStage() + 1;
+        while (nextStage < Word.LEARNED) {
+            if ((nextStage == Word.TO_PRESENT) || (nextStage == Word.SHOW_HEAD_WORD)) break;
+            if (nextStage == Word.SHOW_PRONUNCIATION) {
+                if (hasPronunciation()) break;
+            }
+            if (nextStage == Word.SHOW_TRANSLATION) {
+                if (hasTranslations()) break;
+            }
+            if (nextStage == Word.SHOW_IMAGE) {
+                boolean hasImage = hasImage();
+                if (hasImage) break;
+            }
+            nextStage++;
+        }
+        return nextStage;
+    }
+
+    public int getStage() {
+        return learningStage;
+    }
+
+
+    public void response(int response_code) {
+        switch(response_code) {
+            case EASY:
+                easy_responses += 1;
+                break;
+            case NORMAL:
+                normal_responses += 1;
+                break;
+            case HARD:
+                hard_responses += 1;
+        }
     }
 
     public void bury(boolean bury) {
         buried = bury;
+    }
+
+    public boolean hasTranslations() {
+        return translations.length > 0;
     }
 
     public boolean hasPronunciation() {
@@ -264,25 +334,43 @@ public class Word {
         return arrayToString(measures);
     }
 
-    public Uri persist(Context context) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(PushDbContract.Vocabulary.COLUMN_ID, this.getId());
-            contentValues.put(PushDbContract.Vocabulary.COLUMN_HEAD_WORD,this.getHeadWord());
-            contentValues.put(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION,this.getPronunciation());
-            contentValues.put(PushDbContract.Vocabulary.COLUMN_TRANSLATION,this.getTranslation());
-            contentValues.put(PushDbContract.Vocabulary.COLUMN_MEASURES,this.getMeasuresString());
-            contentValues.put(PushDbContract.Vocabulary.COLUMN_EXAMPLES, arrayToString(this.getExampleIds()));
-            contentValues.put(PushDbContract.Vocabulary.COLUMN_LEVEL,this.getLevel());
-            if (hasAudio()) {
-                contentValues.put(PushDbContract.Vocabulary.COLUMN_AUDIO, true);
-            }
-            if (hasImage()) {
-                contentValues.put(PushDbContract.Vocabulary.COLUMN_IMAGE, true);
-            }
+    private ContentValues getVariableContent() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR, this.scheduledTo);
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_EASY,this.easy_responses);
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_NORMAL,normal_responses);
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_HARD, hard_responses);
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE, learningStage);
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_BURIED, buried);
+        return contentValues;
+    }
 
-            // description is column in items table, item.description has value for description
-            word_uri =context.getContentResolver().insert(PushDbContract.Vocabulary.CONTENT_URI, contentValues);
-            return word_uri;
+    public Uri store(Context context) {
+        ContentValues contentValues = getVariableContent();
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_ID, this.getId());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_HEAD_WORD,this.getHeadWord());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION,this.getPronunciation());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_TRANSLATION,this.getTranslation());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_MEASURES,this.getMeasuresString());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_EXAMPLES, arrayToString(this.getExampleIds()));
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_LEVEL,this.getLevel());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_AUDIO, hasAudio());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_IMAGE, hasImage());
+
+        // description is column in items table, item.description has value for description
+        word_uri =context.getContentResolver().insert(PushDbContract.Vocabulary.CONTENT_URI, contentValues);
+        return word_uri;
+    }
+
+    public int persist(Context context) {
+        ContentValues contentValues = getVariableContent();
+        int affectedRows = context.getContentResolver().update(
+                Uri.parse(PushDbContract.Vocabulary.CONTENT_URI + "/" + String.valueOf(this.getId())),
+                contentValues,
+                null,
+                null
+        );
+        return affectedRows;
     }
 
     public void delete(Context context) {
@@ -296,5 +384,12 @@ public class Word {
         } else {
             Log.w("Word", "Word hasnt been saved yet!");
         }
+    }
+
+    public void setScheduledTo(int scheduledTo) {
+        this.scheduledTo = scheduledTo;
+    }
+    public int getScheduledTo() {
+        return scheduledTo;
     }
 }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#EBEAEA"
     android:layout_height="match_parent"
     >
     <ScrollView
@@ -15,12 +17,104 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:paddingBottom="60dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
             android:orientation="vertical"
-            android:id="@+id/word_container"
-            android:paddingBottom="100dp">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/bury_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:focusable="true"
+                    android:padding="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/skip_button"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bury"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grayish"
+                        tools:layout_editor_absoluteX="243dp"
+                        tools:layout_editor_absoluteY="16dp" />
+
+                    <net.steamcrafted.materialiconlib.MaterialIconView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/materialIconView2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="8dp"
+                        android:scaleType="center"
+                        app:materialIcon="delete"
+                        app:materialIconColor="@color/grayish"
+                        app:materialIconSize="20dp"
+                        tools:layout_editor_absoluteX="286dp"
+                        tools:layout_editor_absoluteY="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:id="@+id/skip_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <TextView
+                        android:id="@+id/search_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Skip"
+                        android:textAllCaps="true"
+                        android:textColor="@color/grayish"
+                        tools:layout_editor_absoluteX="330dp"
+                        tools:layout_editor_absoluteY="16dp" />
+
+                    <net.steamcrafted.materialiconlib.MaterialIconView
+
+                        android:id="@+id/materialIconView"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="8dp"
+                        android:scaleType="center"
+                        app:materialIcon="redo"
+                        app:materialIconColor="@color/grayish"
+                        app:materialIconSize="20dp"
+                        tools:layout_editor_absoluteX="367dp"
+                        tools:layout_editor_absoluteY="16dp" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:id="@+id/word_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
     <com.getbase.floatingactionbutton.FloatingActionsMenu xmlns:fab="http://schemas.android.com/apk/res-auto"
@@ -65,17 +159,4 @@
             />
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-    <ImageButton
-        android:id="@+id/contextualMenuButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@color/white"
-        android:background = "@drawable/rounded_button"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_more_vert_black_24"
-        android:scaleType="center"
-        />
 </androidx.constraintlayout.widget.ConstraintLayout>

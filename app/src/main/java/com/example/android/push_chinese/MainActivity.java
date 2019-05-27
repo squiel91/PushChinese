@@ -15,6 +15,7 @@
  */
 package com.example.android.push_chinese;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,16 +43,39 @@ import androidx.work.WorkManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.concurrent.TimeUnit;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
-public class MainActivity extends AppCompatActivity implements VocabularyFragment.Listener {
+public class MainActivity extends AppCompatActivity implements VocabularyFragment.Listener, SRScheduler.SRSchedulerInterface, VocabularyFragment.KeboardHandler {
+
+
 
     SimpleFragmentPagerAdaptor adapter;
     TabLayout tabLayout;
+    SRScheduler sRScheduler = null;
+
+    @Subscribe
+    public void wordQuantityChanged(Integer newWordQuantity) {
+//        Log.w("onWordSelectedEvent", newWordQuantity.toString());
+        sRScheduler.wordsEachDay = newWordQuantity;
+    };
+
+    @Override
+    public SRScheduler getSRScheduler() {
+        if (sRScheduler == null) {
+            sRScheduler = new SRScheduler(this);
+        }
+        return sRScheduler;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements VocabularyFragmen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+
         super.onCreate(savedInstanceState);
         startWorker();
 
@@ -111,5 +139,24 @@ public class MainActivity extends AppCompatActivity implements VocabularyFragmen
         ).setInputData(inputData).addTag(workTag).build();
 
         WorkManager.getInstance(this).enqueue(notificationWork);
+    }
+
+    @Override
+    public void openKeyboard(EditText view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    @Override
+    public void closeKeyboard() {
+        Activity activity = this;
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View focused_view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (focused_view == null) {
+            focused_view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(focused_view.getWindowToken(), 0);
     }
 }

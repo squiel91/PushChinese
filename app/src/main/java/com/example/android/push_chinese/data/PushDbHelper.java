@@ -26,8 +26,12 @@ public class PushDbHelper extends SQLiteOpenHelper {
                     Vocabulary.COLUMN_AUDIO + " INTEGER DEFAULT 0, " +
                     Vocabulary.COLUMN_IMAGE + " INTEGER DEFAULT 0, " +
                     Vocabulary.COLUMN_TRANSLATION + " TEXT NOT NULL, " +
-                    Vocabulary.COLUMN_DIFFICULTY + " INTEGER DEFAULT 0, " +
-                    Vocabulary.COLUMN_BURIED + " INTEGER DEFAULT 0" +
+                    Vocabulary.COLUMN_SCHEDULE_FOR + " INTEGER DEFAULT 0, " +
+                    Vocabulary.COLUMN_BURIED + " INTEGER DEFAULT 0, " +
+                    Vocabulary.COLUMN_EASY + " INTEGER DEFAULT 0, " +
+                    Vocabulary.COLUMN_NORMAL + " INTEGER DEFAULT 0, " +
+                    Vocabulary.COLUMN_HARD + " INTEGER DEFAULT 0, " +
+                    Vocabulary.COLUMN_LEARNING_STAGE + " INTEGER DEFAULT 0" +
             ");";
 
     private static String SQL_CREATE_SENTENCES_STATEMENT =

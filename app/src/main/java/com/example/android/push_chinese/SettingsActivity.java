@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -15,6 +16,8 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -30,14 +33,16 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Push Chinese Notifications
+        boolean learnWordsIn = preferences.contains("notifications");
+        Log.w("Contains", String.valueOf(learnWordsIn));
         boolean notifications = preferences.getBoolean("notifications", true);
 
         final Switch notificationsSwitch= (Switch)findViewById(R.id.settings_notifications_switch);
-        notificationsSwitch.setChecked(notifications)
-        ;
+        notificationsSwitch.setChecked(notifications);
+
         findViewById(R.id.settings_notifications).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,16 +63,14 @@ public class SettingsActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int whichButton) {
                                         justConfirmedDisable = true;
                                         notificationsSwitch.setChecked(false);
-                                        PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
-                                                .edit().putBoolean("notifications",false).apply();
+                                        preferences.edit().putBoolean("notifications",false).apply();
                                     }})
                                 .setNegativeButton("Cancel", null).show();
                     } else {
                         justConfirmedDisable = false;
                     }
                 } else {
-                    PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
-                            .edit().putBoolean("notifications",true).apply();
+                    preferences.edit().putBoolean("notifications",true).apply();
                 }
             }
         });
@@ -88,6 +91,8 @@ public class SettingsActivity extends AppCompatActivity {
                 updateVisualDifficulty(i, word_quantity, word_quantity_qualifier, null);
                 PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
                         .edit().putInt("wordsEachDay",(i + 1)*5).apply();
+                EventBus.getDefault().post(new Integer((i + 1)*5));
+
             }
 
             @Override
@@ -95,6 +100,66 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        // Learn new words
+
+        boolean learnNewWords = preferences.getBoolean("learnNewWords", true);
+        final CheckBox learNewWordsCheckbox = findViewById(R.id.preferences_learn_new_words_checkbox);
+        learNewWordsCheckbox.setChecked(learnNewWords);
+
+        findViewById(R.id.preferences_learn_new_words).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                learNewWordsCheckbox.toggle();
+            }
+        });
+
+        learNewWordsCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                preferences.edit().putBoolean("learnNewWords",b).apply();
+            }
+        });
+
+        // Traditional characters
+        boolean traditionalCharacters = preferences.getBoolean("traditionalCharacters", false);
+        final CheckBox traditionalCharactersCheckbox = findViewById(R.id.preferences_traditional_characters_checkbox);
+        traditionalCharactersCheckbox.setChecked(traditionalCharacters);
+
+        findViewById(R.id.preferences_traditional_characters).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                traditionalCharactersCheckbox.toggle();
+            }
+        });
+
+        traditionalCharactersCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
+                        .edit().putBoolean("traditionalCharacters",b).apply();
+            }
+        });
+
+        // Show exercises
+        boolean showExercises = preferences.getBoolean("showExercises", true);
+        final CheckBox showExerciesesCheckbox = findViewById(R.id.preferences_show_exercises_checkbox);
+        showExerciesesCheckbox.setChecked(showExercises);
+
+        findViewById(R.id.preferences_show_exercises).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showExerciesesCheckbox.toggle();
+            }
+        });
+
+        showExerciesesCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
+                        .edit().putBoolean("showExercises",b).apply();
+            }
         });
 
         // Open Source
@@ -118,65 +183,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 composeEmail("ezequiel@pushlanguages.com", "Push Chinese Feedback", null);
-            }
-        });
-        // Learn new words
-        boolean learnNewWords = preferences.getBoolean("learnNewWords", true);
-        final CheckBox learNewWordsCheckbox = findViewById(R.id.preferences_learn_new_words_checkbox);
-        learNewWordsCheckbox.setActivated(learnNewWords);
-
-        findViewById(R.id.preferences_learn_new_words).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                learNewWordsCheckbox.toggle();
-            }
-        });
-
-        learNewWordsCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
-                        .edit().putBoolean("learnNewWords",b).apply();
-            }
-        });
-
-        // Traditional characters
-        boolean traditionalCharacters = preferences.getBoolean("traditionalCharacters", false);
-        final CheckBox traditionalCharactersCheckbox = findViewById(R.id.preferences_traditional_characters_checkbox);
-        traditionalCharactersCheckbox.setActivated(traditionalCharacters);
-
-        findViewById(R.id.preferences_traditional_characters).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                traditionalCharactersCheckbox.toggle();
-            }
-        });
-
-        traditionalCharactersCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
-                        .edit().putBoolean("traditionalCharacters",b).apply();
-            }
-        });
-
-        // Show exercises
-        boolean showExercises = preferences.getBoolean("showExercises", true);
-        final CheckBox showExerciesesCheckbox = findViewById(R.id.preferences_show_exercises_checkbox);
-        showExerciesesCheckbox.setActivated(showExercises);
-
-        findViewById(R.id.preferences_show_exercises).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showExerciesesCheckbox.toggle();
-            }
-        });
-
-        showExerciesesCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
-                        .edit().putBoolean("showExercises",b).apply();
             }
         });
     }

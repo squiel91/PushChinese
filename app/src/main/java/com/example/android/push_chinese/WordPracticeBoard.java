@@ -6,12 +6,15 @@ import android.media.MediaPlayer;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.android.push_chinese.expandable_section.ExpandableSection;
 import com.squareup.picasso.Picasso;
@@ -61,9 +64,12 @@ public class WordPracticeBoard {
     }
 
     public  ArrayList<ExpandableSection> expandWord(final Word word, final boolean animated) {
+
         ArrayList<ExpandableSection> sections = new ArrayList<>();
+
+        ExpandableSection imageSection = null;
         if (word.hasImage()) {
-            ExpandableSection imageSection = new ExpandableSection(context);
+            imageSection = new ExpandableSection(context);
             Picasso.get().load(String.format("https://pushchinese.000webhostapp.com/resources/image/%d.jpg", word.getId()))
                     .into((ImageView) imageSection.contentView);
             practiceBoard.addView(imageSection.section);
@@ -83,6 +89,7 @@ public class WordPracticeBoard {
         sections.add(headWordSection);
         innerWord.addView(headWordSection);
 
+        ExpandableSection audioSection = null;
         if (word.hasAudio()) {
             LinearLayout audioContainer = new LinearLayout(context);
             TextView pronunciationTextView = new TextView(context);
@@ -143,40 +150,71 @@ public class WordPracticeBoard {
                 }
             });
 
-            ExpandableSection audioSection = new ExpandableSection(context, "Pronunciation",  audioContainer, false);
+            audioSection = new ExpandableSection(context, "Pronunciation",  audioContainer, false);
             innerWord.addView(audioSection);
             sections.add(audioSection);
         } else {
-            ExpandableSection audioSection = new ExpandableSection(context, "Pronunciation", word.getPronunciation(), false, 20);
+            audioSection = new ExpandableSection(context, "Pronunciation", word.getPronunciation(), false, 20);
             innerWord.addView(audioSection);
             sections.add(audioSection);
         }
+
+        ExpandableSection translationsSection = null;
         if ((word.getTranslations() != null) && (word.getTranslations().length > 0)) {
             LinearLayout translationsListView = createList(context, word.getTranslations(), 20, 8);
-            ExpandableSection translationsSection = new ExpandableSection(context, "Translations", translationsListView, false);
+            translationsSection = new ExpandableSection(context, "Translations", translationsListView, false);
             innerWord.addView(translationsSection);
             sections.add(translationsSection);
         }
+
+        ExpandableSection measureWordsSection = null;
         if ((word.getMeasures() != null) && (word.getMeasures().length > 0)) {
-            ExpandableSection measureWordsSection = new ExpandableSection(context, "Measure words", word.getMeasuresString(), false, 20);
+            measureWordsSection = new ExpandableSection(context, "Measure words", word.getMeasuresString(), false, 20);
             innerWord.addView(measureWordsSection);
             sections.add(measureWordsSection);
         }
+
+        ExpandableSection examplesSection = null;
         if ((word.getExampleIds() != null) && (word.getExampleIds().length > 0)) {
             LinearLayout examplesListView = createList(context, word.getExamples(context, true), 20, 8);
-            ExpandableSection examplesSection = new ExpandableSection(context, "Examples", examplesListView, false);
+            examplesSection = new ExpandableSection(context, "Examples", examplesListView, false);
             innerWord.addView(examplesSection);
             sections.add(examplesSection);
         }
 
-        for (ExpandableSection section : sections) {
-            section.expand(animated);
+        switch (word.getStage()) {
+            case Word.TO_PRESENT:
+                if (imageSection != null) imageSection.expand(animated);
+                headWordSection.expand(animated);
+                if (audioSection != null) audioSection.expand(animated);
+                if (translationsSection != null) translationsSection.expand(animated);
+                break;
+            case Word.SHOW_HEAD_WORD:
+                headWordSection.expand(animated);
+                break;
+            case Word.SHOW_PRONUNCIATION:
+                audioSection.expand(animated);
+                break;
+            case Word.SHOW_TRANSLATION:
+                translationsSection.expand(animated);
+                break;
+            case Word.SHOW_IMAGE:
+                imageSection.expand(animated);
+                break;
+            default:
+                if (imageSection != null) imageSection.expand(animated);
+                headWordSection.expand(animated);
+                if (audioSection != null) audioSection.expand(animated);
+                if (translationsSection != null) translationsSection.expand(animated);
         }
+
+        if (measureWordsSection != null) measureWordsSection.expand(animated);
+        if (examplesSection != null) examplesSection.expand(animated);
+
         return sections;
     }
 
     public  void collapseWord(final Word newWord) {
-        Log.w("collapseWord", "Being called and nr of sections:" + wordSections.size());
         toCollapse = 0;
         for (ExpandableSection section : wordSections) {
             if (section.isExpanded()) {
@@ -205,7 +243,13 @@ public class WordPracticeBoard {
         changeWord(word, true);
     }
 
-    public  void changeWord(Word word, boolean animated) {
+    public void emptyPractice() {
+        practiceBoard.removeAllViews();
+        LayoutInflater inflator = LayoutInflater.from(context);
+        inflator.inflate(R.layout.empty_practice, practiceBoard, true);
+    }
+
+    public void changeWord(Word word, boolean animated) {
         if ((!animated) || (this.word == null)) {
             practiceBoard.removeAllViews();
             wordSections = expandWord(word, animated);

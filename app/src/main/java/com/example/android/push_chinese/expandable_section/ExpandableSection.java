@@ -244,7 +244,6 @@ public class ExpandableSection extends LinearLayout {
     }
 
     public void collapse(final View v) {
-        Log.w("collapse", "entering");
         final int initialHeight = v.getMeasuredHeight();
 
         Animation a = new Animation()

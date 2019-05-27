@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.android.push_chinese">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        tools:replace="android:allowBackup"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="Push Chinese"
@@ -23,7 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Onboarding" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize" />
 
         <provider
             android:name=".data.PushProvider"

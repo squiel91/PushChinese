@@ -18,6 +18,7 @@
     <color name="primary_color">#2196F3</color>
 
     <color name="grayish">#C0C0C0</color>
+    <color name="black">#000</color>
 
     <color name="backgroundTint">#1976D2</color>
     <!-- Primary dark color of the app (shown in the status bar) -->

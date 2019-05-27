@@ -38,6 +38,8 @@ allprojects {
 
 
 dependencies {
+    implementation 'net.steamcrafted:materialiconlib:1.1.5'
+    implementation 'com.diogobernardino:williamchart:2.5.0'
     implementation "androidx.work:work-runtime:2.1.0-alpha01"
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
@@ -49,4 +51,5 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.takisoft.fix:preference-v7:25.3.0.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

@@ -72,8 +72,6 @@ public class PushProvider extends ContentProvider {
             case SENTENCES_ID:
                 selection = PushDbContract.Sentences._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
-
-                Log.w("TEST_ID", String.valueOf(selectionArgs[0]));
                 // This will perform a query on the pets table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
                 cursor = database.query(PushDbContract.Sentences.TABLE_NAME, projection, selection, selectionArgs,
@@ -181,15 +179,6 @@ public class PushProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
         sanityCheck(contentValues, false);
-        int updated_row;
-        if (contentValues.containsKey(PushDbContract.Vocabulary.COLUMN_DIFFICULTY)) {
-            updateDifficulty(uri, contentValues.getAsInteger(PushDbContract.Vocabulary.COLUMN_DIFFICULTY));
-            contentValues.remove(PushDbContract.Vocabulary.COLUMN_DIFFICULTY);
-        }
-        if (contentValues.containsKey(PushDbContract.Vocabulary.COLUMN_BURIED)) {
-            updateBury(uri, contentValues.getAsInteger(PushDbContract.Vocabulary.COLUMN_BURIED));
-            contentValues.remove(PushDbContract.Vocabulary.COLUMN_BURIED);
-        }
 
         if(contentValues.size() > 0) {
             int match = uriMatcher.match(uri);
@@ -199,7 +188,7 @@ public class PushProvider extends ContentProvider {
 
                     String word_id = String.valueOf(ContentUris.parseId(uri));
 
-                    db.update(PushDbContract.Vocabulary.TABLE_NAME, contentValues,
+                    return db.update(PushDbContract.Vocabulary.TABLE_NAME, contentValues,
                             PushDbContract.Vocabulary._ID + " = ?", new String[]{word_id});
                 default:
                     throw new IllegalArgumentException("updateBury is not supported for " + uri);
@@ -208,53 +197,10 @@ public class PushProvider extends ContentProvider {
         return 1;
     }
 
-    public int updateDifficulty(@NonNull Uri uri, int difficulty) {
-        if (difficulty < PushDbContract.Vocabulary.UNKNOWN || difficulty > PushDbContract.Vocabulary.DIFFICULT) {
-            throw new IllegalArgumentException("difficulty parameter should be a number between 0 and 3");
-        }
-        int match = uriMatcher.match(uri);
-        switch (match) {
-            case VOCABULARY_ID:
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                String word_id = String.valueOf(ContentUris.parseId(uri));
-
-                ContentValues args = new ContentValues();
-                ContentValues  contentValues= new ContentValues();
-                contentValues.put(PushDbContract.Vocabulary.COLUMN_DIFFICULTY, difficulty);
-
-                return db.update(PushDbContract.Vocabulary.TABLE_NAME, contentValues,
-                        PushDbContract.Vocabulary._ID + " = ?", new String[]{word_id});
-            default:
-                throw new IllegalArgumentException("updateBury is not supported for " + uri);
-        }
-    }
-
-    public int updateBury(@NonNull Uri uri, int bury) {
-        int match = uriMatcher.match(uri);
-        switch (match) {
-            case VOCABULARY_ID:
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                String word_id = String.valueOf(ContentUris.parseId(uri));
-
-                ContentValues args = new ContentValues();
-                ContentValues  contentValues= new ContentValues();
-                contentValues.put(PushDbContract.Vocabulary.COLUMN_BURIED, bury);
-//                Log.w("ID", String.valueOf(word_id));
-                int toReturn = db.update(PushDbContract.Vocabulary.TABLE_NAME, contentValues,
-                        PushDbContract.Vocabulary._ID + " = ?", new String[]{word_id});
-//                Log.w("RETURM", String.valueOf(toReturn));
-                return toReturn;
-            default:
-                throw new IllegalArgumentException("updateBury is not supported for " + uri);
-        }
-    }
-
     private void sanityCheck(ContentValues contentValues, boolean required) {
         // TODO: check that there are not more parameters that there should be
-        String name = contentValues.getAsString(PushDbContract.Vocabulary.COLUMN_HEAD_WORD);
-        if (required && name == null) { throw new IllegalArgumentException("Word requires a name"); }
+        String head_word = contentValues.getAsString(PushDbContract.Vocabulary.COLUMN_HEAD_WORD);
+        if (required && head_word == null) { throw new IllegalArgumentException("Word requires a head word"); }
 
         Integer level = contentValues.getAsInteger(PushDbContract.Vocabulary.COLUMN_LEVEL);
         if (level != null && (level < 0 || level > 6)) { throw new IllegalArgumentException("If level specified, it should be between 0 and 6"); }
