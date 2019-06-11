@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.example.android.push_chinese.MainActivity">
+    tools:context="com.example.android.push_chinese.activities.MainActivity">
 
     <com.google.android.material.tabs.TabLayout
         app:tabMaxWidth="0dp"

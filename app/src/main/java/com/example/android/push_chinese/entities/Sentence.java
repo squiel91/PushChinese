@@ -1,4 +1,4 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.entities;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -61,8 +61,8 @@ public class Sentence {
     }
 
     public static Sentence from_id(Long id, Context context) {
-        ;Cursor cursor =context.getContentResolver().query(
-                Uri.parse(PushDbContract.Sentences.CONTENT_URI + "/" + String.valueOf(id)),
+        Cursor cursor =context.getContentResolver().query(
+                Uri.parse(PushDbContract.Sentences.CONTENT_URI + "/" + id),
                 null, null, null, null);
         return Sentence.from_cursor(cursor);
     }

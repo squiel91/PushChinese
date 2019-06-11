@@ -33,7 +33,7 @@ public class Indicator extends LinearLayout {
         int padding = getPixelDimensions(8);
         this.setPadding(padding, padding, padding, padding);
         LayoutInflater.from(context).inflate(R.layout.graph_indicator, this, true);
-        titleTextView = this.findViewById(R.id.indicator_title);
+        titleTextView = this.findViewById(R.id.history);
         nominatorTextView = this.findViewById(R.id.indicator_nominator);
         nominatorTextView.setText("toper");
         denominatorTextView = this.findViewById(R.id.indicator_denominator);

@@ -24,6 +24,7 @@ public class PushDbContract {
         public static final String COLUMN_ID = BaseColumns._ID;
         public static final String COLUMN_HEAD_WORD = "head_word";
         public static final String COLUMN_PRONUNCIATION = "pronunciation";
+        public static final String COLUMN_PRONUNCIATION_SEARCHABLE = "pronunciation_searchable";
         public static final String COLUMN_TRANSLATION = "translation";
         public static final String COLUMN_MEASURES = "measures";
         public static final String COLUMN_EXAMPLES = "examples";
@@ -66,6 +67,25 @@ public class PushDbContract {
         public static final String COLUMN_SENTENCE = "sentence";
         public static final String COLUMN_TRANSLATION = "translation";
         public static final String COLUMN_AUDIO = "audio";
+
+    }
+
+    public static abstract class Statics implements BaseColumns {
+        public static final String TABLE_NAME = "statics";
+
+        public static final String PATH_STATICS = TABLE_NAME;
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_STATICS);
+
+        public static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STATICS;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_STATICS;
+
+
+        public static final String COLUMN_ID = BaseColumns._ID;
+        public static final String COLUMN_LEARNED = "learned";
+        public static final String COLUMN_REVIEWED = "reviewed";
+        public static final String COLUMN_EASY = "easy";
+        public static final String COLUMN_NORMAL = "normal";
+        public static final String COLUMN_HARD = "hard";
 
     }
 

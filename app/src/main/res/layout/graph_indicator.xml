@@ -17,7 +17,7 @@
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/indicator_title" />
+        app:layout_constraintTop_toBottomOf="@+id/history" />
 
     <TextView
         android:id="@+id/indicator_denominator"
@@ -30,10 +30,10 @@
         android:textSize="24sp"
         android:textStyle="normal|bold"
         app:layout_constraintStart_toEndOf="@+id/indicator_nominator"
-        app:layout_constraintTop_toBottomOf="@+id/indicator_title" />
+        app:layout_constraintTop_toBottomOf="@+id/history" />
 
     <TextView
-        android:id="@+id/indicator_title"
+        android:id="@+id/history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

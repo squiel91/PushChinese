@@ -13,34 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.activities;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import com.example.android.push_chinese.data.PushDbContract;
+import com.example.android.push_chinese.utilities.NotifyWorker;
+import com.example.android.push_chinese.R;
+import com.example.android.push_chinese.utilities.SimpleFragmentPagerAdaptor;
+import com.example.android.push_chinese.entities.Word;
+import com.example.android.push_chinese.fragments.VocabularyFragment;
+import com.example.android.push_chinese.utilities.SRScheduler;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.appcompat.widget.PopupMenu;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +46,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.concurrent.TimeUnit;
-
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 public class MainActivity extends AppCompatActivity implements VocabularyFragment.Listener, SRScheduler.SRSchedulerInterface, VocabularyFragment.KeboardHandler {
 
@@ -108,6 +100,19 @@ public class MainActivity extends AppCompatActivity implements VocabularyFragmen
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         SimpleFragmentPagerAdaptor adapter = new SimpleFragmentPagerAdaptor(getSupportFragmentManager());
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                closeKeyboard();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
+
         // Set the adapter onto the view pager
         viewPager.setAdapter(adapter);
 
@@ -158,5 +163,11 @@ public class MainActivity extends AppCompatActivity implements VocabularyFragmen
             focused_view = new View(activity);
         }
         imm.hideSoftInputFromWindow(focused_view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+        finish();
     }
 }

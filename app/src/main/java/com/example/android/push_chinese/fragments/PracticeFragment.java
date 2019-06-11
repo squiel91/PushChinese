@@ -1,4 +1,4 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.fragments;
 
 
 import android.content.ContentResolver;
@@ -12,11 +12,15 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.android.push_chinese.R;
+import com.example.android.push_chinese.utilities.SRScheduler;
+import com.example.android.push_chinese.utilities.WordPracticeBoard;
+import com.example.android.push_chinese.others.WordSelectedEvent;
+import com.example.android.push_chinese.entities.Word;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 

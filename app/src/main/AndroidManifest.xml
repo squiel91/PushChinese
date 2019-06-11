@@ -12,20 +12,20 @@
         android:label="Push Chinese"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NotificationsGuide" android:label="@string/title_activity_notifications_guide"/>
-        <activity android:name=".OpenSource"  android:label="@string/title_activity_open_source" />
+        <activity android:name=".others.NotificationsGuide" android:label="@string/title_activity_notifications_guide"/>
+        <activity android:name=".activities.OpenSource"  android:label="@string/title_activity_open_source" />
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="Settings" />
-        <activity android:name=".EntryPoint">
+        <activity android:name=".activities.EntryPoint">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Onboarding" />
-        <activity android:name=".MainActivity"
+        <activity android:name=".activities.Onboarding" android:configChanges="orientation|screenSize"/>
+        <activity android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize" />
 
         <provider

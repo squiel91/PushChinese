@@ -1,4 +1,4 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.entities;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,10 +13,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.example.android.push_chinese.utilities.Helper.withoutNumbersAndSpaces;
+
 public class Word {
     private Long id;
     private String headWord;
     private String pronunciation;
+    private String pronunciation_searchable;
     private String[] translations;
     private String[] measures;
     private Integer level;
@@ -111,6 +114,7 @@ public class Word {
                 cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_IMAGE))  == 1
         );
 
+        newWord.pronunciation_searchable = withoutNumbersAndSpaces(cursor.getString(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION_SEARCHABLE)));
         newWord.scheduledTo = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR));
         newWord.buried = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_BURIED)) == 1;
         newWord.easy_responses = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_EASY));
@@ -120,14 +124,6 @@ public class Word {
 
         return newWord;
     }
-
-    static private String getTonal(JSONObject jsonObject) {
-        if (jsonObject == null) {
-            return null;
-        }
-        return jsonObject.optString("tonal");
-    }
-
 
     public static Word from_json(JSONObject json) throws JSONException {
         JSONArray jsonExamples = json.getJSONArray(PushDbContract.Vocabulary.COLUMN_EXAMPLES);
@@ -163,10 +159,18 @@ public class Word {
             measures = new String[0];
         }
 
-        return new Word(
+        JSONObject pronunciationJsonObject = json.optJSONObject(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION);
+        String tonalPinyin = null;
+        String numericPinyin = null;
+        if (pronunciationJsonObject != null) {
+            tonalPinyin = pronunciationJsonObject.optString("tonal");
+            numericPinyin = withoutNumbersAndSpaces(pronunciationJsonObject.optString("numeric"));
+        }
+
+        Word newWord = new Word(
                 json.getLong("id"),
                 json.getString(PushDbContract.Vocabulary.COLUMN_HEAD_WORD),
-                getTonal(json.optJSONObject(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION)),
+                tonalPinyin,
                 translations,
                 measures,
                 examples,
@@ -174,6 +178,8 @@ public class Word {
                 json.optBoolean("audio", false),
                 json.optBoolean("image", false)
         );
+        newWord.pronunciation_searchable = numericPinyin;
+        return newWord;
     }
 
     public static Word from_id(Context context, Long id) {
@@ -350,6 +356,7 @@ public class Word {
         contentValues.put(PushDbContract.Vocabulary.COLUMN_ID, this.getId());
         contentValues.put(PushDbContract.Vocabulary.COLUMN_HEAD_WORD,this.getHeadWord());
         contentValues.put(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION,this.getPronunciation());
+        contentValues.put(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION_SEARCHABLE,this.pronunciation_searchable);
         contentValues.put(PushDbContract.Vocabulary.COLUMN_TRANSLATION,this.getTranslation());
         contentValues.put(PushDbContract.Vocabulary.COLUMN_MEASURES,this.getMeasuresString());
         contentValues.put(PushDbContract.Vocabulary.COLUMN_EXAMPLES, arrayToString(this.getExampleIds()));

@@ -1,4 +1,4 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.utilities;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import com.example.android.push_chinese.R;
+import com.example.android.push_chinese.entities.Word;
 import com.example.android.push_chinese.expandable_section.ExpandableSection;
 import com.squareup.picasso.Picasso;
 
@@ -34,7 +34,7 @@ public class WordPracticeBoard {
     ArrayList<ExpandableSection> wordSections;
     int toCollapse;
 
-    WordPracticeBoard(Context context, ViewGroup practiceBoard) {
+    public WordPracticeBoard(Context context, ViewGroup practiceBoard) {
         this.context = context;
         practiceBoard.removeAllViews();
         this.practiceBoard = practiceBoard;

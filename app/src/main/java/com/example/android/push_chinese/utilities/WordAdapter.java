@@ -1,11 +1,8 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.utilities;
 
 import android.content.Context;
 import android.database.Cursor;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -13,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.LayoutInflater;
 
+import com.example.android.push_chinese.R;
+import com.example.android.push_chinese.entities.Word;
 import com.squareup.picasso.Picasso;
 
 public class WordAdapter extends CursorAdapter {

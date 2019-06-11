@@ -1,4 +1,4 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.others;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

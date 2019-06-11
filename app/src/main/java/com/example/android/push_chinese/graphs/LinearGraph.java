@@ -6,10 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.db.chart.model.LineSet;
-import com.db.chart.view.LineChartView;
 import com.example.android.push_chinese.R;
-import com.example.android.push_chinese.Word;
 
 public class LinearGraph extends LinearLayout {
     private Context context;
@@ -34,7 +31,7 @@ public class LinearGraph extends LinearLayout {
         super(context);
         this.context = context;
         LayoutInflater.from(context).inflate(R.layout.graph_indicator, this, true);
-        titleTextView = this.findViewById(R.id.indicator_title);
+        titleTextView = this.findViewById(R.id.history);
         nominatorTextView = this.findViewById(R.id.indicator_nominator);
         nominatorTextView.setText("toper");
         denominatorTextView = this.findViewById(R.id.indicator_denominator);

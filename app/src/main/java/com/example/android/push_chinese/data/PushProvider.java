@@ -14,6 +14,11 @@ import android.util.Log;
 import static com.example.android.push_chinese.data.PushDbContract.CONTENT_AUTHORITY;
 import static com.example.android.push_chinese.data.PushDbContract.Vocabulary.PATH_VOCABULARY;
 import static com.example.android.push_chinese.data.PushDbContract.Sentences.PATH_SENTENCES;
+import static com.example.android.push_chinese.data.PushDbContract.Statics.PATH_STATICS;
+
+import com.example.android.push_chinese.data.PushDbContract.Vocabulary;
+import com.example.android.push_chinese.data.PushDbContract.Sentences;
+import com.example.android.push_chinese.data.PushDbContract.Statics;
 
 public class PushProvider extends ContentProvider {
 
@@ -25,12 +30,16 @@ public class PushProvider extends ContentProvider {
     private static final int VOCABULARY_ID = 101;
     private static final int SENTENCES = 200;
     private static final int SENTENCES_ID = 201;
+    private static final int STATICS = 300;
+    private static final int STATICS_ID = 301;
 
     static {
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_VOCABULARY, VOCABULARY);
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_VOCABULARY + "/#", VOCABULARY_ID);
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_SENTENCES, SENTENCES);
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_SENTENCES + "/#", SENTENCES_ID);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_STATICS, STATICS);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_STATICS + "/#", STATICS_ID);
     }
 
     @Override
@@ -53,28 +62,36 @@ public class PushProvider extends ContentProvider {
         int match = uriMatcher.match(uri);
         switch (match) {
             case VOCABULARY:
-                cursor = database.query(PushDbContract.Vocabulary.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(Vocabulary.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case VOCABULARY_ID:
-                selection = PushDbContract.Vocabulary._ID + "=?";
+                selection = Vocabulary._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
 
                 // This will perform a query on the pets table where the _id equals 3 to return a
                 // Cursor containing that row of the table.
-                cursor = database.query(PushDbContract.Vocabulary.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(Vocabulary.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case SENTENCES:
-                cursor = database.query(PushDbContract.Sentences.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(Sentences.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             case SENTENCES_ID:
-                selection = PushDbContract.Sentences._ID + "=?";
+                selection = Sentences._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
-                // This will perform a query on the pets table where the _id equals 3 to return a
-                // Cursor containing that row of the table.
-                cursor = database.query(PushDbContract.Sentences.TABLE_NAME, projection, selection, selectionArgs,
+                cursor = database.query(Sentences.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
+                break;
+            case STATICS:
+                cursor = database.query(Statics.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
+                break;
+            case STATICS_ID:
+                selection = Statics._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                cursor = database.query(Statics.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
             default:
@@ -90,13 +107,17 @@ public class PushProvider extends ContentProvider {
         final int match = uriMatcher.match(uri);
         switch (match) {
             case VOCABULARY:
-                return PushDbContract.Vocabulary.CONTENT_LIST_TYPE;
+                return Vocabulary.CONTENT_LIST_TYPE;
             case VOCABULARY_ID:
-                return PushDbContract.Vocabulary.CONTENT_ITEM_TYPE;
+                return Vocabulary.CONTENT_ITEM_TYPE;
             case SENTENCES:
-                return PushDbContract.Sentences.CONTENT_LIST_TYPE;
+                return Sentences.CONTENT_LIST_TYPE;
             case SENTENCES_ID:
-                return PushDbContract.Sentences.CONTENT_ITEM_TYPE;
+                return Sentences.CONTENT_ITEM_TYPE;
+            case STATICS:
+                return Statics.CONTENT_LIST_TYPE;
+            case STATICS_ID:
+                return Statics.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
@@ -111,22 +132,20 @@ public class PushProvider extends ContentProvider {
                 return insertWord(uri, contentValues);
             case SENTENCES:
                 return insertSentence(uri, contentValues);
+            case STATICS:
+                return insertStatic(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
     }
 
-    /**
-     * Insert a pet into the database with the given content values. Return the new content URI
-     * for that specific row in the database.
-     */
     private Uri insertWord(Uri uri, ContentValues contentValues) {
         sanityCheck(contentValues, true);
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // description is column in items table, item.description has value for description
-        long word_id = db.insert(PushDbContract.Vocabulary.TABLE_NAME, null, contentValues);
+        long word_id = db.insert(Vocabulary.TABLE_NAME, null, contentValues);
 
         db.close();
 
@@ -139,14 +158,14 @@ public class PushProvider extends ContentProvider {
     }
 
     private Uri insertSentence(Uri uri, ContentValues contentValues) {
-        if (!contentValues.containsKey(PushDbContract.Sentences.COLUMN_SENTENCE)) {
+        if (!contentValues.containsKey(Sentences.COLUMN_SENTENCE)) {
             throw new IllegalArgumentException("Sentence can not be empty");
         }
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // description is column in items table, item.description has value for description
-        long sentence_id = db.insert(PushDbContract.Sentences.TABLE_NAME, null, contentValues);
+        long sentence_id = db.insert(Sentences.TABLE_NAME, null, contentValues);
 
         db.close();
 
@@ -158,6 +177,25 @@ public class PushProvider extends ContentProvider {
         }
     }
 
+    private Uri insertStatic(Uri uri, ContentValues contentValues) {
+        if (!contentValues.containsKey(Statics.COLUMN_ID)) {
+            throw new IllegalArgumentException("Static id should be the inserted day number");
+        }
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        long static_id = db.insert(Statics.TABLE_NAME, null, contentValues);
+
+        db.close();
+
+        if (static_id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        } else {
+            return ContentUris.withAppendedId(uri, static_id);
+        }
+    }
+
     @Override
     public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
         return delete(uri);
@@ -165,15 +203,27 @@ public class PushProvider extends ContentProvider {
 
     public int delete(@NonNull Uri uri) {
         int match = uriMatcher.match(uri);
+        ContentValues args = new ContentValues();
+        String entity_id = String.valueOf(ContentUris.parseId(uri));
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int deleted_quantity = 0;
         switch (match) {
             case VOCABULARY_ID:
-                ContentValues args = new ContentValues();
-                String word_id = String.valueOf(ContentUris.parseId(uri));
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                return db.delete(PushDbContract.Vocabulary.TABLE_NAME, PushDbContract.Vocabulary._ID + " = ?", new String[]{word_id});
+                deleted_quantity = db.delete(Vocabulary.TABLE_NAME,
+                        Vocabulary._ID + " = ?", new String[]{entity_id});
+            case SENTENCES_ID:
+                deleted_quantity = db.delete(Sentences.TABLE_NAME,
+                        Sentences._ID + " = ?", new String[]{entity_id});
+            case STATICS_ID:
+                deleted_quantity = db.delete(Statics.TABLE_NAME,
+                        Statics._ID + " = ?", new String[]{entity_id});
             default:
-                throw new IllegalArgumentException("Delete is not supported for " + uri);
+                // TODO: correct to a throw
+                Log.e(LOG_TAG, "Delete is not supported for " + uri);
+                // throw new IllegalArgumentException("Delete is not supported for " + uri);
         }
+        db.close();
+        return deleted_quantity;
     }
 
     @Override
@@ -182,14 +232,18 @@ public class PushProvider extends ContentProvider {
 
         if(contentValues.size() > 0) {
             int match = uriMatcher.match(uri);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            String entity_id = String.valueOf(ContentUris.parseId(uri));
             switch (match) {
                 case VOCABULARY_ID:
-                    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-                    String word_id = String.valueOf(ContentUris.parseId(uri));
-
-                    return db.update(PushDbContract.Vocabulary.TABLE_NAME, contentValues,
-                            PushDbContract.Vocabulary._ID + " = ?", new String[]{word_id});
+                    return db.update(Vocabulary.TABLE_NAME, contentValues,
+                            Vocabulary._ID + " = ?", new String[]{entity_id});
+                case SENTENCES_ID:
+                    return db.update(Sentences.TABLE_NAME, contentValues,
+                            Vocabulary._ID + " = ?", new String[]{entity_id});
+                case STATICS_ID:
+                    return db.update(Statics.TABLE_NAME, contentValues,
+                            Vocabulary._ID + " = ?", new String[]{entity_id});
                 default:
                     throw new IllegalArgumentException("updateBury is not supported for " + uri);
             }

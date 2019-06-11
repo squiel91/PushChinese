@@ -1,8 +1,7 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,13 +13,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.push_chinese.data.PushDbContract;
-import com.example.android.push_chinese.data.PushDbHelper;
-import com.example.android.push_chinese.data.PushProvider;
+import com.example.android.push_chinese.R;
+import com.example.android.push_chinese.entities.Sentence;
+import com.example.android.push_chinese.entities.Word;
+import com.example.android.push_chinese.utilities.Helper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -117,7 +116,9 @@ public class Onboarding  extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putBoolean("onboarded",true);
+        editor.putInt("initializedDay", Helper.daysSinceEpoch());
         editor.putInt("level", level);
+
         editor.apply();
 
         Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);

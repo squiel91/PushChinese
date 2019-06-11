@@ -16,7 +16,8 @@ android:orientation="vertical"
         android:clipToPadding="false"
         android:divider="@null"
         android:drawSelectorOnTop="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
     </ListView>
 
@@ -25,36 +26,28 @@ android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingTop="0dp"
         android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="8dp"
+            android:text="Is that even an HSK 1 word?"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/no_results" />
+            app:srcCompat="@drawable/no_results_alt" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="No HSK 1 word matches your search"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/grayish"
-            android:visibility="visible" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingTop="16dp"
-            android:paddingRight="8dp"
-            android:text="TIP: You can search by chinese character, pinyin or translation"
-            android:textAlignment="center"
-            android:textColor="@color/grayish"
-            android:visibility="visible" />
     </LinearLayout>
 
 </LinearLayout>

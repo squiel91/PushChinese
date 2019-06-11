@@ -16,7 +16,12 @@
 <resources>
     <!-- Primary color of the app (shown in the app bar) -->
     <color name="primary_color">#2196F3</color>
+    <color name="hard_tint">#2196F3</color>
+    <color name="normal_tint">#4EB2FF</color>
+    <color name="easy_tint">#A2D6FF</color>
 
+    <color name="transparent_blue">#2C2196F3</color>
+    <color name="transparent_orange">#2DFD8E09</color>
     <color name="grayish">#C0C0C0</color>
     <color name="black">#000</color>
 

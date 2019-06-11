@@ -1,19 +1,26 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
-import android.text.TextPaint;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.android.push_chinese.data.PushDbContract;
+import com.example.android.push_chinese.entities.Statics;
+import com.example.android.push_chinese.entities.Word;
+
+import org.threeten.bp.DateTimeUtils;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.Instant;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+
+import static com.example.android.push_chinese.utilities.Helper.daysSinceEpoch;
 
 public class SRScheduler {
 
@@ -22,7 +29,11 @@ public class SRScheduler {
     int newWordsStudied;
     public int wordsEachDay;
     Random random;
-    Date firstDayInteraction;
+    int firstDayInteraction;
+
+    final static public int YESTERDAY = -1;
+    final static public int TODAY = 0;
+    final static public int TOMORROW = 1;
 
     public interface SRSchedulerInterface {
         SRScheduler getSRScheduler();
@@ -30,13 +41,15 @@ public class SRScheduler {
 
     public SRScheduler(final Context context) {
         this.context = context;
-        random = new Random();
+        random = new Random(); // to draw between different words
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this.context);
+
         if (preferences.contains("firstDayInteraction")) {
-            firstDayInteraction = new Date(preferences.getLong("firstDayInteraction", 0));
+            firstDayInteraction = preferences.getInt("firstDayInteraction", 0);
         } else {
-            firstDayInteraction = new Date();
-            preferences.edit().putLong("firstDayInteraction", firstDayInteraction.getTime()).apply();
+            firstDayInteraction = daysSinceEpoch();
+            preferences.edit().putInt("firstDayInteraction", firstDayInteraction).apply();
         }
 
         newWordsStudied = preferences.getInt("newWordsStudied", 0);
@@ -49,16 +62,17 @@ public class SRScheduler {
                 // TODO: add the stop learning words
                 if (s == "wordsEachDay") {
                     wordsEachDay = sharedPreferences.getInt("wordsEachDay", 0);
-                    Log.w("OOOOOOOO: wordsEachDay", String.valueOf(wordsEachDay));
                 }
-                Log.w("TOPER","out");
             }
         });
     }
 
+    public int learnedToday() {
+        return newWordsStudied;
+    }
+
     public int getRemainingWords() {
-        Log.w("OO0O: getRemainingWords", String.valueOf(Math.max(wordsEachDay - newWordsStudied, 0)));
-        return Math.max(wordsEachDay - newWordsStudied, 0);
+        return Math.max(wordsEachDay - learnedToday(), 0);
     }
 
     private void setStudiedWords(int value) {
@@ -91,26 +105,23 @@ public class SRScheduler {
     }
 
     public void rescheduleWord(Word word, int difficulty) {
-        if (word.getHeadWord() == "写") {
-            int t=4;
-            Log.w("dummy", "t");
-        }
         // is being revised
         if (word.getStage() == Word.TO_PRESENT) {
+            Statics.addLearnedWord(context);
             increaseStudiedWords();
 //            Toast.makeText(context, "New words: " + getRemainingWords(), Toast.LENGTH_SHORT).show();
         }
         word.response(difficulty);
         if (word.moveToNextStage() >= Word.LEARNED) {
+            Statics.addReviewedWord(context, difficulty);
             int n = word.getStage() - Word.LEARNED + 1;
             double r = 1.4355;
             double b = difficulty == Word.EASY? 2.0 : difficulty == Word.NORMAL? 1.0 : 0.1;
             int newInterval = (int)Math.ceil(b * Math.pow(r, n-1));
             Log.w("rescheduleWord", n + "/interval: " + newInterval);
-            int scheduledTo =  howManyDaysSinceBC() + newInterval;
+            int scheduledTo =  daysSinceEpoch() + newInterval;
             word.setScheduledTo(scheduledTo);
         }
-        Log.w("rescheduleWord", "stage: " + word.getStage());
         word.persist(context);
     }
 
@@ -126,7 +137,7 @@ public class SRScheduler {
                         PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR + " <= ?",
                 new String[]{ String.valueOf(PushDbContract.Vocabulary.NOT_BURIED),
                         String.valueOf(PushDbContract.Vocabulary.LEARNED),
-                        String.valueOf(howManyDaysSinceBC() + when)
+                        String.valueOf(daysSinceEpoch() + when)
                 },
                 sortOrder
                 );
@@ -139,6 +150,7 @@ public class SRScheduler {
     public Word toReview() {
         return toReview(0);
     }
+
     public Word toReview(int when) {
         Cursor toReviseWordCursor = toReviewCursor(true, when);
         Word toReviseWord = null;
@@ -169,7 +181,6 @@ public class SRScheduler {
     public Word nextStudyWord() {
         checkForNewDay();
         // NOTICE: id doesn't remember last served word, so better ask where did you left off before calling this function
-        Word nextWord = null;
         ArrayList<Word> possibleWords = new ArrayList<>();
 
         if (getRemainingWords() > 0) {
@@ -184,33 +195,12 @@ public class SRScheduler {
         return possibleWords.size() > 0? possibleWords.get(random.nextInt(possibleWords.size())) : null;
     }
 
-    public int howManyDaysSinceBC() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        return cal.get(Calendar.YEAR) * 366 + cal.get(Calendar.DAY_OF_YEAR);
-    }
-
-    private boolean oneDayOrMorePassed(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance();
-        cal1.setTime(date1);
-
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTime(date2);
-        int year1 = cal1.get(Calendar.YEAR);
-        int year2 = cal2.get(Calendar.YEAR);
-
-        int dayOfYear1 = cal1.get(Calendar.DAY_OF_YEAR);
-        int dayOfYear2 = cal2.get(Calendar.DAY_OF_YEAR);
-
-        return (year2 > year1) || (dayOfYear2 > dayOfYear1);
-    }
-
     private void checkForNewDay() {
-        Date now = new Date();
-        if (oneDayOrMorePassed(firstDayInteraction, now)) {
+        if (firstDayInteraction < daysSinceEpoch()) {
             setStudiedWords(0);
-            preferences.edit().putLong("firstDayInteraction", (new Date()).getTime()).apply();
-            firstDayInteraction = now;
+            int newDay = daysSinceEpoch();
+            preferences.edit().putInt("firstDayInteraction", newDay).apply();
+            firstDayInteraction = newDay;
 //            Toast.makeText(context, "NEW DAY PASSED", Toast.LENGTH_SHORT).show();
         }
     }

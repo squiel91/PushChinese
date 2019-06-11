@@ -1,10 +1,12 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.example.android.push_chinese.R;
 
 public class OpenSource extends AppCompatActivity {
 

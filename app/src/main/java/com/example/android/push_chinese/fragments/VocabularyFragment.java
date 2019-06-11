@@ -1,53 +1,46 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.fragments;
 
 
-import android.content.DialogInterface;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.android.push_chinese.R;
+import com.example.android.push_chinese.utilities.WordAdapter;
+import com.example.android.push_chinese.others.WordSelectedEvent;
 import com.example.android.push_chinese.data.PushDbContract;
 import com.example.android.push_chinese.data.PushDbHelper;
+import com.example.android.push_chinese.entities.Word;
 
 import org.greenrobot.eventbus.EventBus;
+
+import static com.example.android.push_chinese.utilities.Helper.withoutNumbersAndSpaces;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class VocabularyFragment extends Fragment {
 
-    interface KeboardHandler {
+    public interface KeboardHandler {
         void openKeyboard(EditText view);
         void closeKeyboard();
     }
 
-    interface Listener {
+    public interface Listener {
         public void onWordSelected(Word word);
     }
 
@@ -82,9 +75,12 @@ public class VocabularyFragment extends Fragment {
                 if (querry != null) {
                     queryCursor = getContext().getContentResolver().query(PushDbContract.Vocabulary.CONTENT_URI, projection,
                              "INSTR(" + PushDbContract.Vocabulary.COLUMN_HEAD_WORD + ", ?) > 0 OR INSTR(" +
-                                     PushDbContract.Vocabulary.COLUMN_TRANSLATION + ", ?) > 0", new String[] {
+                                     PushDbContract.Vocabulary.COLUMN_TRANSLATION + ", ?) > 0 OR INSTR(" +
+                                     PushDbContract.Vocabulary.COLUMN_PRONUNCIATION_SEARCHABLE + ", ?) > 0"
+                            , new String[] {
                                     querry.toString(),
-                                    querry.toString()
+                                    querry.toString(),
+                                    withoutNumbersAndSpaces(querry.toString())
                             }, null);
                 } else {
                     queryCursor = getCursor();

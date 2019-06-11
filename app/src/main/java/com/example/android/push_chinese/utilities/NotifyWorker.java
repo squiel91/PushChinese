@@ -1,4 +1,4 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.utilities;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 
@@ -16,7 +15,11 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.android.push_chinese.others.NotificationReceiver;
+import com.example.android.push_chinese.R;
+import com.example.android.push_chinese.activities.MainActivity;
 import com.example.android.push_chinese.data.PushDbContract;
+import com.example.android.push_chinese.entities.Word;
 
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;

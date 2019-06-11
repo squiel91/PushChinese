@@ -1,13 +1,17 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.utilities;
 
 import android.content.Context;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.android.push_chinese.fragments.PracticeFragment;
+import com.example.android.push_chinese.fragments.StaticsFragment;
+import com.example.android.push_chinese.fragments.VocabularyFragment;
+
 public class SimpleFragmentPagerAdaptor extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "Practice", "Vocabulary", "Statics"};
+    private String tabTitles[] = new String[] { "Practice", "Vocabulary", "Stats"};
     private Context context;
 
     Fragment practice;

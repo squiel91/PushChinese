@@ -1,4 +1,4 @@
-package com.example.android.push_chinese;
+package com.example.android.push_chinese.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +16,9 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.example.android.push_chinese.others.NotificationsGuide;
+import com.example.android.push_chinese.R;
 
 import org.greenrobot.eventbus.EventBus;
 
