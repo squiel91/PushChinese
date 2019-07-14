@@ -1,29 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.example.android.push_chinese.activities.MainActivity">
+    tools:context="com.example.android.everytian.activities.MainActivity">
 
     <com.google.android.material.tabs.TabLayout
-        app:tabMaxWidth="0dp"
-        app:tabGravity="fill"
         android:id="@+id/sliding_tabs"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:tabBackground="@color/primary_color"
+        app:tabGravity="fill"
         app:tabIndicatorColor="@color/white"
-        app:tabTextColor="@color/white"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/white"
-        app:tabMode="fixed" />
+        app:tabTextColor="@color/white" />
 
     <androidx.viewpager.widget.ViewPager
-        android:layout_width="match_parent"
+        android:id="@+id/viewPager"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/viewPager"
-        />
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sliding_tabs" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/drawing_board"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.raodevs.touchdraw.TouchDrawView
+            android:id="@+id/touch_draw_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/drawing_board_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/redo_action"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="@+id/clear_action"
+            app:layout_constraintStart_toEndOf="@+id/clear_action"
+            app:layout_constraintTop_toTopOf="@+id/clear_action"
+            app:materialIcon="redo"
+            app:materialIconColor="@color/drawing_board_buttons" />
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/clear_action"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="40dp"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="@+id/touch_draw_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:materialIcon="delete_variant"
+            app:materialIconColor="@color/drawing_board_buttons" />
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/undo_action"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/clear_action"
+            app:layout_constraintEnd_toStartOf="@+id/clear_action"
+            app:layout_constraintTop_toTopOf="@+id/clear_action"
+            app:materialIcon="undo"
+            app:materialIconColor="@color/drawing_board_buttons" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.example.android.everytian.utilities.VoiceRecorder
+        android:id="@+id/voice_recorder_panel"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.example.android.everytian.utilities.VoiceRecorder>
+</androidx.constraintlayout.widget.ConstraintLayout>

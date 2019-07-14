@@ -16,9 +16,14 @@
 <resources>
     <!-- Primary color of the app (shown in the app bar) -->
     <color name="primary_color">#2196F3</color>
+    <color name="primary_color_semi_transparent">#8EC4EB</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="hard_tint">#2196F3</color>
     <color name="normal_tint">#4EB2FF</color>
     <color name="easy_tint">#A2D6FF</color>
+
+    <color name="drawing_board_background">#E6FFFFFF</color>
+    <color name="drawing_board_buttons">#353535</color>
 
     <color name="transparent_blue">#2C2196F3</color>
     <color name="transparent_orange">#2DFD8E09</color>
@@ -45,22 +50,14 @@
 
     <color name="background_color">#16AFCA</color>
 
-    <color name="difficulty_0">#000000</color>
-    <color name="difficulty_1">#000000</color>
-    <color name="difficulty_2">#000000</color>
-    <color name="difficulty_3">#000000</color>
-    <color name="difficulty_4">#000000</color>
-    <color name="difficulty_5">#000000</color>
-    <color name="difficulty_6">#c0392b</color>
-    <color name="difficulty_7">#c0392b</color>
-    <color name="difficulty_8">#c0392b</color>
-    <color name="difficulty_9">#c0392b</color>
+    <color name="easy_level">#000000</color>
+    <color name="difficult_level">#c0392b</color>
 
 
     <color name="black_semi_transparent">#B2000000</color>
-    <color name="background">#e5e5e5</color>
+    <color name="background">#FDFDFD</color>
     <color name="half_black">#808080</color>
-    <color name="white">#fafafa</color>
+    <color name="white">#FFFFFF</color>
     <color name="white_pressed">#f1f1f1</color>
     <color name="pink">#e91e63</color>
     <color name="pink_pressed">#ec407a</color>

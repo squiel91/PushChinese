@@ -2,11 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.android.push_chinese.activities.MainActivity">
+    tools:context="com.example.android.everytian.activities.MainActivity">
+    <item
+        android:id="@+id/voice_recorder_item"
+        android:title="Voice recorder"
+        android:icon="@drawable/icon_record"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/draw_item"
+        android:title="Writing board"
+        android:icon="@drawable/gesture"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"
         android:title="Settings"
-        android:icon="@drawable/ic_filter"
+        android:icon="@drawable/adjust_settings"
         android:orderInCategory="1"
         app:showAsAction="ifRoom" />
 </menu>

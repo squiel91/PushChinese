@@ -23,20 +23,20 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:text="Push Chinese Notifications"
-                    />
+                    android:text="Push Notifications"
+                    android:textSize="16dp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
                     android:layout_marginTop="2dp"
+                    android:text="Daily reminder so you never miss a day of study"
                     android:textColor="#757575"
-                    android:text="Lock screen notifications are essential to boost your learning"
-                    />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <Switch
@@ -49,34 +49,7 @@
                 />
 
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
 
-        <LinearLayout
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Notifications active time - All day"
-                android:textSize="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Set the period of the day you want notifications to be shown"
-                android:textColor="#757575"
-                android:textSize="14sp" />
-        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -99,31 +72,32 @@
                     android:textSize="16dp"
                     android:text="Words each day:"
                     />
+
                 <TextView
-                    android:layout_marginLeft="8dp"
                     android:id="@+id/settings_word_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
+                    android:layout_marginLeft="4dp"
                     android:text="15"
-                    />
+                    android:textSize="16dp" />
+
                 <TextView
-                    android:layout_marginLeft="8dp"
                     android:id="@+id/settings_word_qualifier"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
+                    android:layout_marginLeft="8dp"
                     android:text="Intense"
-                    />
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:layout_marginTop="2dp"
-                    android:textColor="#757575"
-                    android:text="Number of new words that will be presented to you everyday"
-                    />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Number of new words for you to learn each day"
+                android:textColor="#757575"
+                android:textSize="14sp" />
             <SeekBar
                 android:id="@+id/settings_seekBar"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
@@ -158,14 +132,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Learn new words"
+                    android:text="Holidays Mode"
                     android:textSize="16dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Uncheck it if you temporary want to stop learning new words, just continue reviewing previous words"
+                    android:text="Temporary stop learning new words, only review previously learned vocabulary"
                     android:textColor="#757575"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -179,33 +153,6 @@
                 app:backgroundTint="@color/primary_color" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
-        <LinearLayout
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="Change Level"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp"
-                android:textColor="#757575"
-                android:text="The previous level learning data will get freeze"
-                />
-        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -229,7 +176,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Traditional characters"
+                    android:text="Switch To Traditional Characters"
                     android:textSize="16dp" />
 
                 <TextView
@@ -249,50 +196,6 @@
                 android:theme="@style/SwitchTheme"
                 app:backgroundTint="@color/primary_color" />
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
-        <LinearLayout
-            android:id="@+id/preferences_show_exercises"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Show exercises"
-                    android:layout_height="wrap_content"
-                    android:textSize="16dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Exercise will help you to asses weather you really can recall a word"
-                    android:textColor="#757575"
-                    android:textSize="14sp" />
-            </LinearLayout>
-
-            <CheckBox
-                android:id="@+id/preferences_show_exercises_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColorLink="#673AB7"
-                android:theme="@style/SwitchTheme"
-                app:backgroundTint="@color/primary_color"
-                />
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -307,49 +210,22 @@
             android:orientation="vertical"
             android:padding="16dp"
             android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:text="Open source"
-                    />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Used Open Source"
+                android:textSize="16dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="List the amazing open source projects  that are used in Push Chinese"
+                android:text="List the amazing open source projects  that made this project possible"
                 android:textColor="#757575"
                 android:textSize="14sp" />
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
-        <LinearLayout
-            android:id="@+id/preferences_notifications_guide"
-            android:layout_width="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="Lock screen notifications not working well"
-                />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Help on how to set the preferences properly for showing Chinese Push Notifications"
-                android:textColor="#757575"
-                android:textSize="14sp" />
-        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

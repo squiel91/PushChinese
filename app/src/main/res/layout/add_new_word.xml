@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Image"
+        android:textAllCaps="true"
+        android:textColor="@color/grayish"
+        android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/main_image"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/add_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Take picture" />
+
+        <Button
+            android:id="@+id/pick_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Pick from gallery" />
+
+        <Button
+            android:id="@+id/remove_image_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="- Remove image" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Pronunciation"
+            android:textAllCaps="true"
+            android:textColor="@color/grayish"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/pronunciation_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary_color"
+            android:ems="10"
+            android:hint="nv3 peng3 you2"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Input the numerical Pinyin" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Characters"
+            android:textAllCaps="true"
+            android:textColor="@color/grayish"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/characters_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/primary_color"
+            android:ems="10"
+            android:hint="女朋友"
+            android:inputType="textPersonName"
+            />
+
+        <TextView
+            android:id="@+id/textView34"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Input the Chinese characters" />
+
+        <TextView
+            android:id="@+id/textView30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Translations"
+            android:textAllCaps="true"
+            android:textColor="@color/grayish"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/translation_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
+        <Button
+            android:id="@+id/add_translation_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Add" />
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Measure Words"
+            android:textAllCaps="true"
+            android:textColor="@color/grayish"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/measures_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
+        <Button
+            android:id="@+id/add_measure_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Add" />
+
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Examples"
+            android:textAllCaps="true"
+            android:textColor="@color/grayish"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/examples_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+
+        <Button
+            android:id="@+id/add_example_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Add" />
+
+    </LinearLayout>
+</ScrollView>
