@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "46467731675",
+    "firebase_url": "https://tian_tian-app.firebaseio.com",
+    "project_id": "tian_tian-app",
+    "storage_bucket": "tian_tian-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46467731675:android:0ca2744d5398c150",
+        "android_client_info": {
+          "package_name": "com.example.android.tian_tian"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46467731675-j7divs6b8b7o04snl2mihclip0k6vviq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvLKbkXQ-pbx6OA9bdzCHfBlD6MVYZvQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46467731675-j7divs6b8b7o04snl2mihclip0k6vviq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

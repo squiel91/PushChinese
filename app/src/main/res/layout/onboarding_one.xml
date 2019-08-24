@@ -20,6 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:lineSpacingMultiplier="1.2"
             android:text="MASTER HSK 1 VOCABULARY"
@@ -27,7 +28,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_image" />
+            app:layout_constraintTop_toBottomOf="@+id/added_image_panel" />
 
         <TextView
             android:id="@+id/description"
@@ -44,11 +45,11 @@
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <ImageView
-            android:id="@+id/main_image"
+            android:id="@+id/added_image_panel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
-            android:layout_marginEnd="48dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginEnd="80dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"

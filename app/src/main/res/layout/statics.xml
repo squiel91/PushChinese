@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:williamchart="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/app_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout2"
@@ -26,166 +27,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/to_learn_today3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:text="History &amp; Projections"
-            android:textAllCaps="true"
-            android:textColor="@color/grayish"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/toReviewDashed"
-            williamchart:layout_constraintStart_toStartOf="parent" />
-
-        <com.example.android.everytian.utilities.DoubleGraph
+        <com.example.android.tian_tian.utilities.DoubleGraph
             android:id="@+id/double_graph"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/to_learn_today3"></com.example.android.everytian.utilities.DoubleGraph>
-
-        <TextView
-            android:id="@+id/to_learn_today2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:text="Assigned Difficulty "
-            android:textAllCaps="true"
-            android:textColor="@color/grayish"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/linechart_legend"
-            williamchart:layout_constraintStart_toStartOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/linechart_legend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/linechart"
-            app:layout_constraintTop_toBottomOf="@+id/linechart">
-
-            <TextView
-                android:id="@+id/linechart_state_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:drawableStart="@drawable/stacked_one_point1_bck"
-                android:drawableLeft="@drawable/stacked_one_point1_bck"
-                android:drawablePadding="8dp"
-                android:paddingRight="8dp"
-                android:text="Learn"
-                android:textAllCaps="true"
-                android:textColor="#ff2b2b2b"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/linechart_state_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:drawableStart="@drawable/stacked_one_point4_bck"
-                android:drawableLeft="@drawable/stacked_one_point4_bck"
-                android:drawablePadding="8dp"
-                android:text="Review"
-                android:textAllCaps="true"
-                android:textColor="#ff2b2b2b"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <com.db.chart.view.LineChartView
-            android:id="@+id/linechart"
-            android:layout_width="0dp"
-            android:layout_height="180dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/double_graph">
-
-        </com.db.chart.view.LineChartView>
-
-        <LinearLayout
-            android:id="@+id/legend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chart"
-            app:layout_constraintVertical_bias="1.0">
-
-            <TextView
-                android:id="@+id/state_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_toStartOf="@+id/state_two"
-                android:drawableStart="@drawable/stacked_one_point1_bck"
-                android:drawableLeft="@drawable/stacked_one_point1_bck"
-                android:drawablePadding="8dp"
-                android:paddingRight="8dp"
-                android:text="Hard"
-                android:textAllCaps="true"
-                android:textColor="#ff2b2b2b"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/state_two"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:drawableStart="@drawable/stacked_one_point2_bck"
-                android:drawableLeft="@drawable/stacked_one_point2_bck"
-                android:drawablePadding="8dp"
-                android:paddingRight="8dp"
-                android:text="Normal"
-                android:textAllCaps="true"
-                android:textColor="#ff2b2b2b"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/state_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_toEndOf="@+id/state_two"
-                android:drawableStart="@drawable/stacked_one_point3_bck"
-                android:drawableLeft="@drawable/stacked_one_point3_bck"
-                android:drawablePadding="8dp"
-                android:text="Easy"
-                android:textAllCaps="true"
-                android:textColor="#ff2b2b2b"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <com.db.chart.view.StackBarChartView
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/legend"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/to_learn_today2"
-            williamchart:chart_axis="false"
-            williamchart:chart_cornerRadius="2dp" />
+            app:layout_constraintTop_toBottomOf="@+id/double_graph_projection"></com.example.android.tian_tian.utilities.DoubleGraph>
+
+        <com.example.android.tian_tian.utilities.DoubleGraph
+            android:id="@+id/double_graph_projection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reviewd_so_far"></com.example.android.tian_tian.utilities.DoubleGraph>
 
         <TextView
             android:id="@+id/todays_new_words_so_far"
@@ -205,10 +70,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/todays_new_words_so_far"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="8dp"
             android:text="Learned Words"
             android:textAllCaps="true"
-            app:layout_constraintBottom_toBottomOf="@+id/todays_new_words_so_far"
+            app:layout_constraintBottom_toTopOf="@+id/newWordsDashed"
             app:layout_constraintStart_toEndOf="@+id/todays_new_words_so_far" />
 
         <TextView
@@ -216,10 +81,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:text="--"
             android:textColor="@color/grayish"
-            app:layout_constraintBottom_toBottomOf="@+id/todays_new_words_so_far"
+            app:layout_constraintBottom_toTopOf="@+id/newWordsDashed"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
@@ -239,10 +104,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="8dp"
             android:text="Reviewed Words"
             android:textAllCaps="true"
-            app:layout_constraintBottom_toBottomOf="@+id/reviewd_so_far"
+            app:layout_constraintBottom_toTopOf="@+id/toReviewDashed"
             app:layout_constraintStart_toEndOf="@+id/reviewd_so_far" />
 
         <TextView
@@ -250,10 +115,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:text="--"
             android:textColor="@color/grayish"
-            app:layout_constraintBottom_toBottomOf="@+id/reviewd_so_far"
+            app:layout_constraintBottom_toTopOf="@+id/toReviewDashed"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <LinearLayout
@@ -285,22 +150,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
+            android:layout_marginBottom="8dp"
             android:text="Out Of"
             android:textAllCaps="true"
             android:textColor="@color/grayish"
-            app:layout_constraintEnd_toStartOf="@+id/to_review_total"
-            app:layout_constraintTop_toTopOf="@+id/textView10" />
+            app:layout_constraintBottom_toTopOf="@+id/toReviewDashed"
+            app:layout_constraintEnd_toStartOf="@+id/to_review_total" />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
+            android:layout_marginBottom="8dp"
             android:text="out of"
             android:textAllCaps="true"
             android:textColor="@color/grayish"
-            app:layout_constraintEnd_toStartOf="@+id/todays_new_words_total"
-            app:layout_constraintTop_toTopOf="@+id/textView7" />
+            app:layout_constraintBottom_toTopOf="@+id/newWordsDashed"
+            app:layout_constraintEnd_toStartOf="@+id/todays_new_words_total" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

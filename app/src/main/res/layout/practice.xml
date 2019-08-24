@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/app_background"
     android:orientation="vertical">
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/practiceScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -23,92 +23,85 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:paddingBottom="60dp">
+            android:paddingBottom="60dp"><![CDATA[
             tools:layout_editor_absoluteX="12dp">
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
+
+            ]]>
+
+            <LinearLayout
+                android:id="@+id/word_options_panel"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="176dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="176dp"
-                android:text="That's it for Today!"
-                android:textAllCaps="false"
-                android:textSize="24sp"
-                android:textStyle="bold"
+                android:layout_marginEnd="12dp"
+                android:gravity="end"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.503"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-            <LinearLayout
-                android:id="@+id/bury_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:focusable="true"
-                android:padding="16dp"
-                app:layout_constraintEnd_toStartOf="@+id/skip_button"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/textView3"
+                <LinearLayout
+                    android:id="@+id/bury_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bury"
-                    android:textAllCaps="true"
-                    android:textColor="@color/grayish"
-                    tools:layout_editor_absoluteX="243dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:focusable="true"
+                    android:padding="8dp">
 
-                <net.steamcrafted.materialiconlib.MaterialIconView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/materialIconView2"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="8dp"
-                    android:scaleType="center"
-                    app:materialIcon="delete"
-                    app:materialIconColor="@color/grayish"
-                    app:materialIconSize="20dp"
-                    tools:layout_editor_absoluteX="286dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    <net.steamcrafted.materialiconlib.MaterialIconView
+                        android:id="@+id/materialIconView2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="center"
+                        app:materialIcon="delete"
+                        app:materialIconColor="@color/grayish"
+                        app:materialIconSize="24dp"
+                        tools:layout_editor_absoluteX="286dp"
+                        tools:layout_editor_absoluteY="16dp" />
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/skip_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:focusable="true"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-
-                <TextView
-                    android:id="@+id/search_label"
+                <LinearLayout
+                    android:id="@+id/edit_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Skip"
-                    android:textAllCaps="true"
-                    android:textColor="@color/grayish"
-                    tools:layout_editor_absoluteX="330dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:focusable="true"
+                    android:padding="8dp">
 
-                <net.steamcrafted.materialiconlib.MaterialIconView
 
-                    android:id="@+id/link_cc_cedict_expand"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="8dp"
-                    android:scaleType="center"
-                    app:materialIcon="redo"
-                    app:materialIconColor="@color/grayish"
-                    app:materialIconSize="20dp"
-                    tools:layout_editor_absoluteX="367dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    <net.steamcrafted.materialiconlib.MaterialIconView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="center"
+                        app:materialIcon="pencil"
+                        app:materialIconColor="@color/grayish"
+                        app:materialIconSize="24dp"
+                        tools:layout_editor_absoluteX="367dp"
+                        tools:layout_editor_absoluteY="16dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/skip_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:focusable="true"
+                    android:padding="8dp">
+
+
+                    <net.steamcrafted.materialiconlib.MaterialIconView
+
+                        android:id="@+id/link_cc_cedict_expand"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="center"
+                        app:materialIcon="redo"
+                        app:materialIconColor="@color/grayish"
+                        app:materialIconSize="24dp"
+                        tools:layout_editor_absoluteX="367dp"
+                        tools:layout_editor_absoluteY="16dp" />
+                </LinearLayout>
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
@@ -121,7 +114,7 @@
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bury_button" />
+                app:layout_constraintTop_toBottomOf="@+id/word_options_panel" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/word_card_front"
@@ -133,38 +126,75 @@
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bury_button" />
+                app:layout_constraintTop_toBottomOf="@+id/word_options_panel">
 
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="60dp"
-                android:text="Come back Tomorrow for new vocabulary and to revise learned words"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+            </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="0dp"
-                android:layout_height="150dp"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="48dp"
-                android:scaleType="centerInside"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/relax" />
+            <LinearLayout
+                android:id="@+id/no_action_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:layout_editor_absoluteX="12dp"
+                tools:layout_editor_absoluteY="46dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/relax"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginTop="100dp"
+                        android:layout_marginEnd="48dp"
+                        android:scaleType="centerInside"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/relax" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="76dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="76dp"
+                        android:text="That's it for Today!"
+                        android:textAlignment="center"
+                        android:textAllCaps="false"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.503"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="60dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="60dp"
+                        android:text="Come back Tomorrow for new vocabulary and to revise learned words"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <com.example.android.everytian.utilities.FloatingMenu
+    <com.example.android.tian_tian.utilities.FloatingMenu
         android:id="@+id/floatingMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -172,9 +202,9 @@
         android:layout_marginBottom="24dp"
         android:clipChildren="true"
         android:clipToPadding="true"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+        app:layout_constraintBottom_toBottomOf="@+id/practiceScrollView"
         app:layout_constraintEnd_toEndOf="parent">
 
-    </com.example.android.everytian.utilities.FloatingMenu>
+    </com.example.android.tian_tian.utilities.FloatingMenu>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

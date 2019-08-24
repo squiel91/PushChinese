@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.android.everytian">
+    package="com.example.android.tian_tian">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -10,30 +10,39 @@
     <uses-permission android:name="android.permission.STORAGE"/>
 
     <application
+        android:name="com.example.android.tian_tian.SubApplication"
         tools:replace="android:label,android:allowBackup"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="Everytiān"
+        android:label="Tiān tiān"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.android.everytian.activities.OpenSource"  android:label="@string/title_activity_open_source" />
-        <activity android:name="com.example.android.everytian.activities.AddNewWord"  android:label="New Word" />
+        <activity android:name="com.example.android.tian_tian.activities.OpenSource"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_open_source" />
+        <activity android:name="com.example.android.tian_tian.activities.AddNewWord"
+            android:screenOrientation="portrait"
+            android:label="New Word" />
         <activity
-            android:name="com.example.android.everytian.activities.SettingsActivity"
+            android:name="com.example.android.tian_tian.activities.SettingsActivity"
+            android:screenOrientation="portrait"
             android:label="Settings" />
-        <activity android:name="com.example.android.everytian.activities.EntryPoint" android:theme="@style/SplashTheme">
+        <activity android:name="com.example.android.tian_tian.activities.EntryPoint"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.android.everytian.onboarding.Onboarding" android:configChanges="orientation|screenSize"/>
-        <activity android:name="com.example.android.everytian.activities.MainActivity"
-            android:configChanges="orientation|screenSize" />
+        <activity android:name="com.example.android.tian_tian.onboarding.Onboarding"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.example.android.tian_tian.activities.MainActivity"
+            android:screenOrientation="portrait" />
 
         <provider
-            android:name="com.example.android.everytian.data.PushProvider"
-            android:authorities="com.example.android.everytian"
+            android:name="com.example.android.tian_tian.data.PushProvider"
+            android:authorities="com.example.android.tian_tian"
             android:exported="false" />
     </application>
 

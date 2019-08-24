@@ -6,92 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/loading_bar"
-        style="@style/ProgressBar"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/primary_color"
-        android:backgroundTintMode="src_atop"
-        android:foregroundTint="@color/primary_color"
-        android:foregroundTintMode="src_atop"
-        android:indeterminate="false"
-        android:indeterminateTint="@color/primary_color"
-        android:indeterminateTintMode="src_atop"
-        android:progressBackgroundTint="@color/primary_color"
-        android:progressBackgroundTintMode="src_atop"
-        android:progressTint="@color/primary_color"
-        android:progressTintMode="src_atop"
-        android:secondaryProgressTint="@color/primary_color"
-        android:secondaryProgressTintMode="src_atop"
-        app:layout_constraintEnd_toEndOf="@+id/loading_description"
-        app:layout_constraintStart_toStartOf="@+id/loading_description"
-        app:layout_constraintTop_toBottomOf="@+id/loading_description" />
-
-    <TextView
-        android:id="@+id/loading_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Loading Sentences (1/2)"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/primary_color"
-        android:foregroundTint="@color/primary_color"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/primary_color"
-        android:indeterminateTintMode="src_atop"
-        android:progressBackgroundTint="@color/primary_color"
-        android:progressTint="@color/primary_color"
-        android:secondaryProgressTint="@color/primary_color"
-        app:layout_constraintBottom_toTopOf="@+id/loading_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/onboarding_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:background="#FFFFFF"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#FFFFFF"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    </androidx.viewpager.widget.ViewPager>
 
-        </androidx.viewpager.widget.ViewPager>
+    <com.example.android.tian_tian.onboarding.OnboardingNavigator
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.example.android.everytian.onboarding.OnboardingNavigator
-            android:id="@+id/navigation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-        </com.example.android.everytian.onboarding.OnboardingNavigator>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.example.android.tian_tian.onboarding.OnboardingNavigator>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

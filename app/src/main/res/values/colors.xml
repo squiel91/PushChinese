@@ -30,6 +30,7 @@
     <color name="grayish">#C0C0C0</color>
     <color name="black">#000</color>
 
+
     <color name="backgroundTint">#1976D2</color>
     <!-- Primary dark color of the app (shown in the status bar) -->
     <color name="primary_dark_color">#1976D2</color>
@@ -55,7 +56,7 @@
 
 
     <color name="black_semi_transparent">#B2000000</color>
-    <color name="background">#FDFDFD</color>
+    <color name="app_background">#F0F0F0</color>
     <color name="half_black">#808080</color>
     <color name="white">#FFFFFF</color>
     <color name="white_pressed">#f1f1f1</color>

@@ -65,6 +65,7 @@
                 android:id="@+id/descriptive_image_view"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
+                android:background="@color/grayish"
                 android:scaleType="centerCrop"
                 android:visibility="gone" />
         </LinearLayout>

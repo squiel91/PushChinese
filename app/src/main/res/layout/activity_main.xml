@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="com.example.android.everytian.activities.MainActivity">
+    tools:context="com.example.android.tian_tian.activities.MainActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/sliding_tabs"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabBackground="@color/primary_color"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorColor="@color/app_background"
         app:tabMaxWidth="0dp"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/white"
@@ -44,8 +44,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.raodevs.touchdraw.TouchDrawView
-            android:id="@+id/touch_draw_view"
+        <com.divyanshu.draw.widget.DrawView
+            android:id="@+id/draw_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/drawing_board_background"
@@ -58,49 +58,44 @@
 
         <net.steamcrafted.materialiconlib.MaterialIconView
             android:id="@+id/redo_action"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="@+id/clear_action"
             app:layout_constraintStart_toEndOf="@+id/clear_action"
             app:layout_constraintTop_toTopOf="@+id/clear_action"
             app:materialIcon="redo"
-            app:materialIconColor="@color/drawing_board_buttons" />
+            app:materialIconColor="@color/drawing_board_buttons"
+            app:materialIconSize="30dp" />
 
         <net.steamcrafted.materialiconlib.MaterialIconView
             android:id="@+id/clear_action"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="40dp"
             android:scaleType="center"
-            app:layout_constraintBottom_toBottomOf="@+id/touch_draw_view"
+            app:layout_constraintBottom_toBottomOf="@+id/draw_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:materialIcon="delete_variant"
-            app:materialIconColor="@color/drawing_board_buttons" />
+            app:materialIconColor="@color/drawing_board_buttons"
+            app:materialIconSize="40dp" />
 
         <net.steamcrafted.materialiconlib.MaterialIconView
             android:id="@+id/undo_action"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="16dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="@+id/clear_action"
             app:layout_constraintEnd_toStartOf="@+id/clear_action"
             app:layout_constraintTop_toTopOf="@+id/clear_action"
             app:materialIcon="undo"
-            app:materialIconColor="@color/drawing_board_buttons" />
+            app:materialIconColor="@color/drawing_board_buttons"
+            app:materialIconSize="30dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.example.android.everytian.utilities.VoiceRecorder
-        android:id="@+id/voice_recorder_panel"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </com.example.android.everytian.utilities.VoiceRecorder>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -98,109 +98,110 @@
                 android:text="Number of new words for you to learn each day"
                 android:textColor="#757575"
                 android:textSize="14sp" />
+
             <SeekBar
                 android:id="@+id/settings_seekBar"
                 style="@style/Widget.AppCompat.SeekBar.Discrete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/SwitchTheme"
                 android:layout_marginTop="16dp"
-                android:max="9"
-                android:progress="3" />
+                android:max="10"
+                android:progress="3"
+                android:theme="@style/SwitchTheme" />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
-        <LinearLayout
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:id="@+id/preferences_learn_new_words"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
+        <!--<LinearLayout-->
+            <!--android:clickable="true"-->
+            <!--android:focusable="true"-->
+            <!--android:background="?attr/selectableItemBackground"-->
+            <!--android:id="@+id/preferences_learn_new_words"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:padding="16dp">-->
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Holidays Mode"
-                    android:textSize="16dp" />
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Holidays Mode"-->
+                    <!--android:textSize="16dp" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Temporary stop learning new words, only review previously learned vocabulary"
-                    android:textColor="#757575"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="2dp"-->
+                    <!--android:text="Temporary stop learning new words, only review previously learned vocabulary"-->
+                    <!--android:textColor="#757575"-->
+                    <!--android:textSize="14sp" />-->
+            <!--</LinearLayout>-->
 
-            <CheckBox
-                android:id="@+id/preferences_learn_new_words_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColorLink="#673AB7"
-                android:theme="@style/SwitchTheme"
-                app:backgroundTint="@color/primary_color" />
-        </LinearLayout>
+            <!--<CheckBox-->
+                <!--android:id="@+id/preferences_learn_new_words_checkbox"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColorLink="#673AB7"-->
+                <!--android:theme="@style/SwitchTheme"-->
+                <!--app:backgroundTint="@color/primary_color" />-->
+        <!--</LinearLayout>-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
-        <LinearLayout
-            android:id="@+id/preferences_traditional_characters"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="?android:attr/listDivider" />-->
+        <!--<LinearLayout-->
+            <!--android:id="@+id/preferences_traditional_characters"-->
+            <!--android:clickable="true"-->
+            <!--android:focusable="true"-->
+            <!--android:background="?attr/selectableItemBackground"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:padding="16dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Switch To Traditional Characters"
-                    android:textSize="16dp" />
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Switch To Traditional Characters"-->
+                    <!--android:textSize="16dp" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Used in Taiwan and Hong Kong"
-                    android:textColor="#757575"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="2dp"-->
+                    <!--android:text="Used in Taiwan and Hong Kong"-->
+                    <!--android:textColor="#757575"-->
+                    <!--android:textSize="14sp" />-->
+            <!--</LinearLayout>-->
 
-            <CheckBox
-                android:id="@+id/preferences_traditional_characters_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColorLink="#673AB7"
-                android:theme="@style/SwitchTheme"
-                app:backgroundTint="@color/primary_color" />
-        </LinearLayout>
+            <!--<CheckBox-->
+                <!--android:id="@+id/preferences_traditional_characters_checkbox"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColorLink="#673AB7"-->
+                <!--android:theme="@style/SwitchTheme"-->
+                <!--app:backgroundTint="@color/primary_color" />-->
+        <!--</LinearLayout>-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="?android:attr/listDivider" />-->
         <LinearLayout
             android:id="@+id/preferences_open_source"
             android:clickable="true"
@@ -221,7 +222,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="List the amazing open source projects  that made this project possible"
+                android:text="List of the amazing open source projects used to develop this app"
                 android:textColor="#757575"
                 android:textSize="14sp" />
         </LinearLayout>

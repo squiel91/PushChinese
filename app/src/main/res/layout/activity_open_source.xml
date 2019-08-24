@@ -99,19 +99,6 @@
             app:materialIcon="open_in_new"
             app:materialIconColor="@color/primary_color" />
 
-        <net.steamcrafted.materialiconlib.MaterialIconView
-
-            android:id="@+id/link_williamchart_expand"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:scaleType="center"
-            app:layout_constraintStart_toEndOf="@+id/link_williamchart"
-            app:layout_constraintTop_toTopOf="@+id/link_williamchart"
-            app:materialIcon="open_in_new"
-            app:materialIconColor="@color/primary_color" />
-
         <TextView
             android:id="@+id/textView13"
             android:layout_width="0dp"
@@ -211,22 +198,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="EventBus"
-            android:textColor="@color/primary_color"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView24" />
-
-        <TextView
-            android:id="@+id/link_williamchart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="WilliamChart "
-            android:textAllCaps="false"
             android:textColor="@color/primary_color"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -258,15 +231,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/link_eventbus" />
 
-        <TextView
-            android:id="@+id/textView24"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="by Diogo Bernardino, for stats."
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/link_williamchart" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
