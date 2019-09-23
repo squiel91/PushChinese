@@ -15,9 +15,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static com.example.android.tian_tian.utilities.Helper.listFromStringCursor;
 import static com.example.android.tian_tian.utilities.Helper.withoutNumbersAndSpaces;
 
 public class Word implements Serializable {
@@ -82,65 +84,76 @@ public class Word implements Serializable {
         this.translations = translations;
         this.measures = measures;
         this.examples = examples;
-        if (level != null) {
-            this.level = level;
-        } else {
-            level = null;
-        }
+        this.level = level;
         this.image = (image != null) && image;
         this.audio =  (audio != null) && audio;
     }
 
     public static Word from_cursor(Cursor cursor) {
-        String translationsString =  cursor.getString(
-                cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_TRANSLATION));
-        String[] translations;
-        if ((translationsString != null) && (!translationsString.trim().isEmpty())) {
-            translations = translationsString.split(sep);
+        Word newWord;
+        if (cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_LEVEL) == -1) {
+            newWord = new Word(
+                    (long) 0,
+                    cursor.getString(cursor.getColumnIndexOrThrow("_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("pronunciation")),
+                    listFromStringCursor(cursor, "translations", sep),
+                    listFromStringCursor(cursor, "measures", sep),
+                    listFromStringCursor(cursor, "examples", sep),
+                    0,
+                    false,
+                    false
+            );
         } else {
-            translations = null;
+            String translationsString =  cursor.getString(
+                    cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_TRANSLATION));
+            String[] translations;
+            if ((translationsString != null) && (!translationsString.trim().isEmpty())) {
+                translations = translationsString.split(sep);
+            } else {
+                translations = null;
+            }
+
+            String examplesString = cursor.getString(
+                    cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_EXAMPLES));
+
+            String[] examples;
+            if ((examplesString != null) && (!examplesString.trim().isEmpty())) {
+                examples = examplesString.split(sep);
+            } else {
+                examples = new String[0];
+            }
+
+            String measuresString = cursor.getString(
+                    cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_MEASURES));
+            String[] measures;
+            if ((measuresString != null) && (!measuresString.trim().isEmpty())) {
+                measures = measuresString.split(sep);
+            } else {
+                measures = new String[0];
+            }
+
+            newWord = new Word(
+                    cursor.getLong(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_ID)),
+                    cursor.getString(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_HEAD_WORD)),
+                    cursor.getString(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION)),
+                    translations,
+                    measures,
+                    examples,
+                    cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_LEVEL)),
+                    cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_IMAGE)) == 1,
+                    cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_AUDIO))  == 1
+            );
+
+            newWord.scheduledTo = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR));
+            newWord.learningStage = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE));
         }
-
-        String examplesString = cursor.getString(
-                cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_EXAMPLES));
-
-        String[] examples;
-        if ((examplesString != null) && (!examplesString.trim().isEmpty())) {
-            examples = examplesString.split(sep);
-        } else {
-            examples = new String[0];
-        }
-
-        String measuresString = cursor.getString(
-                cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_MEASURES));
-        String[] measures;
-        if ((measuresString != null) && (!measuresString.trim().isEmpty())) {
-            measures = measuresString.split(sep);
-        } else {
-            measures = new String[0];
-        }
-
-        Word newWord = new Word(
-                cursor.getLong(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_HEAD_WORD)),
-                cursor.getString(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION)),
-                translations,
-                measures,
-                examples,
-                cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_LEVEL)),
-                cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_IMAGE)) == 1,
-                cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_AUDIO))  == 1
-        );
-
-        newWord.scheduledTo = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR));
-        newWord.learningStage = cursor.getInt(cursor.getColumnIndex(PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE));
 
         return newWord;
     }
 
     public static Word from_json(JSONObject json) throws JSONException {
 
-        JSONArray jsonExamples = json.getJSONArray(PushDbContract.Vocabulary.COLUMN_EXAMPLES);
+        JSONArray jsonExamples = json.optJSONArray(PushDbContract.Vocabulary.COLUMN_EXAMPLES);
         String[] examples;
         if (jsonExamples != null) {
             examples = new String[jsonExamples.length()];
@@ -174,10 +187,6 @@ public class Word implements Serializable {
         }
 
         String pronunciation = json.optString(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION);
-        String numericPinyin = null;
-        if (pronunciation != null) {
-            numericPinyin = withoutNumbersAndSpaces(pronunciation);
-        }
 
         Word newWord = new Word(
                 json.getLong("id"),
@@ -190,7 +199,43 @@ public class Word implements Serializable {
                 json.optBoolean("image", false),
                 json.optBoolean("audio", false)
         );
+        if (json.has(PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE))
+            newWord.setStage(json.getInt(PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE));
+        if (json.has(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR))
+            newWord.setScheduledTo(json.getInt(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR));
         return newWord;
+    }
+
+    public JSONObject to_json(boolean includeSRS) {
+        try {
+            JSONObject wordJSON = new JSONObject();
+            wordJSON.put("id", getId());
+            if (getHeadWord() != null) wordJSON.put(PushDbContract.Vocabulary.COLUMN_HEAD_WORD, getHeadWord());
+            if (getPronunciation() != null) wordJSON.put(PushDbContract.Vocabulary.COLUMN_PRONUNCIATION, getPronunciation());
+            if (getTranslations().length > 0) {
+                JSONArray list = new JSONArray(getTranslations());
+                wordJSON.put("translations", list);
+            }
+            if (getMeasures().length > 0) {
+                JSONArray list = new JSONArray(getMeasures());
+                wordJSON.put("measure", list);
+            }
+            if (getExamples().length > 0) {
+                JSONArray list = new JSONArray(getExamples());
+                wordJSON.put(PushDbContract.Vocabulary.COLUMN_EXAMPLES, list);
+            }
+            if (hasImage()) wordJSON.put("image", true);
+            if (hasAudio()) wordJSON.put("audio", true);
+
+            if (includeSRS && getStage() > Word.TO_PRESENT) {
+                wordJSON.put(PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE, getStage());
+                wordJSON.put(PushDbContract.Vocabulary.COLUMN_SCHEDULE_FOR, getScheduledTo());
+            }
+            return wordJSON;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static Word from_id(Context context, Long id) {
@@ -374,7 +419,7 @@ public class Word implements Serializable {
     }
 
     public static String getAudioURI(Long wordId) {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/audio_" + wordId + ".3gp";
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Tiantian/audio_" + wordId + ".3gp";
     }
 
     public String getImageURI() {
@@ -382,7 +427,7 @@ public class Word implements Serializable {
     }
 
     public static String getImageURI(Long wordId) {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() +   "/" + "image_" + wordId + ".png";
+        return Environment.getExternalStorageDirectory().getAbsolutePath() +   "/Tiantian/image_" + wordId + ".png";
     }
 
 
@@ -402,5 +447,24 @@ public class Word implements Serializable {
 
     public void setScheduledTo(int scheduledTo) {
         this.scheduledTo = scheduledTo;
+    }
+
+    public int getScheduledTo() {
+        return scheduledTo;
+    }
+
+    public boolean createAppFolder() {
+        File appDir = new File(Environment.getExternalStorageDirectory()+ File.separator + "Tiantian");
+
+        if(!appDir.exists() && !appDir.isDirectory()) {
+            // create empty directory
+            if (appDir.mkdirs()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 }

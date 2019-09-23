@@ -120,10 +120,10 @@ public class MainActivity extends AppCompatActivity implements PracticeFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-//        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.ic_activity_header_logo);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+//        getSupportActionBar().setLogo(R.drawable.ic_logo);
+//        getSupportActionBar().setDisplayUseLogoEnabled(true);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         super.onCreate(savedInstanceState);
         startWorker();

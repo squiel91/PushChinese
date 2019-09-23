@@ -28,8 +28,8 @@ public class OnboardingSliderAdaptor extends FragmentPagerAdapter {
         if (position == 0) {
             return new IntroOne(
                     R.drawable.onboarding_one,
-                    "MASTER THE VOCABULARY",
-                    "Carefully curated content with audio, images and useful examples"
+                    "CATCH THEM ALL!",
+                    "Adding words is a breeze. Add also audio and images to master them quickly"
             );
         } else if (position == 1){
             return new IntroOne(
@@ -41,10 +41,14 @@ public class OnboardingSliderAdaptor extends FragmentPagerAdapter {
             return new IntroOne(
                     R.drawable.onboarding_three,
                     "RECALL EVERY SINGLE DETAIL",
-                    "With the folding card you will test the word from many different angles"
+                    "With the folding card you will test each word from many different angles"
             );
         } else {
-            return new IntroFinal();
+            return new IntroOne(
+                    R.drawable.onboarding_four,
+                    "NO STRINGS ATTACHED",
+                    "Study anywhere and anytime without the need of an internet connection"
+            );
         }
     }
 

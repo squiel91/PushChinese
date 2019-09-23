@@ -1,6 +1,7 @@
 package com.example.android.tian_tian.utilities;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Environment;
 import android.util.TypedValue;
 import android.view.View;
@@ -25,6 +26,17 @@ import java.util.Date;
 public class Helper {
 
     static int timeMachine = 0;
+
+    static public String[] listFromStringCursor(Cursor cursor, String columnName, String separator) {
+        String line =  cursor.getString(cursor.getColumnIndexOrThrow(columnName));
+        String[] list;
+        if ((line != null) && (!line.trim().isEmpty())) {
+            list = line.split(separator);
+        } else {
+            list = new String[0];
+        }
+        return list;
+    }
 
     static public String withoutNumbersAndSpaces(String input) {
         return input.replaceAll("[0-9 ]", "").toLowerCase();

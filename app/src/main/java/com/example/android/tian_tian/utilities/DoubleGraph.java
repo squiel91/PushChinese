@@ -78,15 +78,16 @@ public class DoubleGraph extends LinearLayout {
 
     public void setData(Integer[] leftData, String[] legend, Integer[] rightData) {
         int maximum = 1;
-        maximum = Math.max(maximum, Helper.max(leftData));
-        maximum = Math.max(maximum, Helper.max(rightData));
-        float each = ((float) 1.0 / maximum);
+        int maximumLeft = Math.max(maximum, Helper.max(leftData));
+        int maximumRight = Math.max(maximum, Helper.max(rightData));
+        float eachLeft = ((float) 1.0 / maximumLeft);
+        float eachRight = ((float) 1.0 / maximumRight);
 
         for (int i = 0; i < legend.length; i++) {
             LinearLayout row = new LinearLayout(context);
             row.setOrientation(HORIZONTAL);
             this.addView(row);
-            row.setPadding(0,0,0, dpiToPixels(context, 4));
+            row.setPadding(0,0,0, dpiToPixels(context, 12));
             row.setGravity(Gravity.CENTER_VERTICAL);
 
             if (leftData != null) {
@@ -98,6 +99,7 @@ public class DoubleGraph extends LinearLayout {
                 leftDataTextView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
 
                 LinearLayout barContainer = new LinearLayout(context);
+                barContainer.setBackground(getResources().getDrawable(R.drawable.rounded_dash_empty));
                 row.addView(barContainer);
                 barContainer.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT,1));
                 View barView = new View(context);
@@ -105,7 +107,7 @@ public class DoubleGraph extends LinearLayout {
                 barView.setLayoutParams(new LayoutParams(
                         0,
                         dpiToPixels(context, 4),
-                        (float) each * leftData[i]
+                        (float) eachLeft * leftData[i]
                 ));
                 barView.setBackground(getResources().getDrawable(R.drawable.rounded_dash_filled));
                 View barEmptyView = new View(context);
@@ -113,7 +115,7 @@ public class DoubleGraph extends LinearLayout {
                 barEmptyView.setLayoutParams(new LayoutParams(
                         0,
                         dpiToPixels(context, 4),
-                        1 - (float) each * leftData[i]
+                        1 - (float) eachLeft * leftData[i]
                 ));
             }
 
@@ -129,12 +131,13 @@ public class DoubleGraph extends LinearLayout {
 
             if (rightData != null) {
                 LinearLayout barContainer = new LinearLayout(context);
+                barContainer.setBackground(getResources().getDrawable(R.drawable.rounded_dash_empty));
                 View barEmptyView = new View(context);
                 barContainer.addView(barEmptyView);
                 barEmptyView.setLayoutParams(new LayoutParams(
                         0,
                         dpiToPixels(context, 4),
-                        1 - (float) each * rightData[i]
+                        1 - (float) eachRight * rightData[i]
                 ));
                 row.addView(barContainer);
                 barContainer.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT,1));
@@ -143,7 +146,7 @@ public class DoubleGraph extends LinearLayout {
                 barView.setLayoutParams(new LayoutParams(
                         0,
                         dpiToPixels(context, 4),
-                        (float) each * rightData[i]
+                        (float) eachRight * rightData[i]
                 ));
                 barView.setBackground(getResources().getDrawable(R.drawable.rounded_dash_filled));
 

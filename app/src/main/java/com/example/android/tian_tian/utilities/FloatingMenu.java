@@ -25,6 +25,10 @@ public class FloatingMenu extends LinearLayout {
         void onExpanded();
     }
 
+    public interface OnSkipedListener {
+        void onSkiped();
+    }
+
     public interface OnCollapsedListener {
         void onCollapsed();
     }
@@ -32,7 +36,8 @@ public class FloatingMenu extends LinearLayout {
     public static enum STATE {
         NEW_WORD,
         EXPAND,
-        RATE
+        RATE,
+        SKIP
     }
 
     boolean expanded = true;
@@ -50,6 +55,7 @@ public class FloatingMenu extends LinearLayout {
     // Listeners
     OnDifficultySelectedListener onDifficultySelectedListener = null;
     OnExpandedListener onExpandedListener = null;
+    OnSkipedListener onSkipedListener = null;
     OnCollapsedListener onCollapsedListener = null;
 
     public FloatingMenu(Context context) {
@@ -129,6 +135,9 @@ public class FloatingMenu extends LinearLayout {
                 case EXPAND:
                     mainButton.setImageResource(R.drawable.icon_revele);
                     break;
+                case SKIP:
+                    mainButton.setImageResource(R.drawable.baseline_redo_white_36);
+                    break;
                 case RATE:
                     mainButton.setImageResource(R.drawable.icon_rate);
             }
@@ -147,6 +156,10 @@ public class FloatingMenu extends LinearLayout {
         this.onCollapsedListener = setOnCollapsedListener;
     }
 
+    public void setOnSkipedListener(OnSkipedListener onSkipedListener) {
+        this.onSkipedListener = onSkipedListener;
+    }
+
     public void toggle(boolean animated) {
         YoYo.with(Techniques.Pulse).duration(100).playOn(mainButton);
         if (expanded) {
@@ -156,22 +169,22 @@ public class FloatingMenu extends LinearLayout {
         }
     }
 
-    public void expand() {
-        expand(true);
-    }
-
     public void expand(boolean animated) {
-        ((View) hardButton).setVisibility(View.VISIBLE);
-        ((View) normalButton).setVisibility(View.VISIBLE);
-        ((View) easyButton).setVisibility(View.VISIBLE);
-        if (animated) {
-            YoYo.with(Techniques.BounceInUp).duration(400).playOn(hardButton);
-            YoYo.with(Techniques.BounceInUp).duration(300).playOn(normalButton);
-            YoYo.with(Techniques.BounceInUp).duration(200).playOn(easyButton);
-        }
+        if (this.state == state.SKIP) {
+            if (onSkipedListener != null) onSkipedListener.onSkiped();
+        } else {
+            ((View) hardButton).setVisibility(View.VISIBLE);
+            ((View) normalButton).setVisibility(View.VISIBLE);
+            ((View) easyButton).setVisibility(View.VISIBLE);
+            if (animated) {
+                YoYo.with(Techniques.BounceInUp).duration(400).playOn(hardButton);
+                YoYo.with(Techniques.BounceInUp).duration(300).playOn(normalButton);
+                YoYo.with(Techniques.BounceInUp).duration(200).playOn(easyButton);
+            }
 
-        expanded = true;
-        if (onExpandedListener != null) onExpandedListener.onExpanded();
+            expanded = true;
+            if (onExpandedListener != null) onExpandedListener.onExpanded();
+        }
     }
 
     public void collapse() {

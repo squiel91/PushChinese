@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.android.tian_tian.BusEvents.LearnQuantityUpdated;
+import com.example.android.tian_tian.BusEvents.StatsUpdate;
 import com.example.android.tian_tian.data.PushDbContract;
 import com.example.android.tian_tian.entities.Statics;
 import com.example.android.tian_tian.entities.Word;
@@ -59,6 +60,12 @@ public class SRScheduler {
     @Subscribe
     public void learningWordsChanged(LearnQuantityUpdated quantity) {
         wordsEachDay = quantity.getQuantity();
+        updateStats();
+    }
+
+    private void updateStats() {
+        EventBus.getDefault().post(new StatsUpdate());
+
     }
 
     public int learnedToday() {
@@ -71,7 +78,7 @@ public class SRScheduler {
 
     private void setStudiedWords(int value) {
         newWordsStudied = value;
-        preferences.edit().putInt("newWordsStudied", value).apply();
+        preferences.edit().putInt("newWordsStudied", newWordsStudied).apply();
     }
 
     private void increaseStudiedWords() {
@@ -126,6 +133,7 @@ public class SRScheduler {
             word.setScheduledTo(scheduledTo);
         }
         word.persist(context);
+        updateStats();
     }
 
     private Cursor toReviewCursor(boolean randomFirst, int when) {
@@ -198,13 +206,15 @@ public class SRScheduler {
         return possibleWords.size() > 0? possibleWords.get(random.nextInt(possibleWords.size())) : null;
     }
 
-    private void checkForNewDay() {
+    public boolean checkForNewDay() {
         if (firstDayInteraction < daysSinceEpoch()) {
             setStudiedWords(0);
             int newDay = daysSinceEpoch();
             preferences.edit().putInt("firstDayInteraction", newDay).apply();
             firstDayInteraction = newDay;
-//            Toast.makeText(context, "NEW DAY PASSED", Toast.LENGTH_SHORT).show();
+            updateStats();
+            return true;
         }
+        return false;
     }
 }

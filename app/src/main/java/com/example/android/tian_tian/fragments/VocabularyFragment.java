@@ -2,7 +2,9 @@ package com.example.android.tian_tian.fragments;
 
 
 import android.content.Intent;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.MergeCursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -13,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -27,7 +30,9 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.android.tian_tian.R;
 import com.example.android.tian_tian.activities.AddNewWord;
+import com.example.android.tian_tian.data.DictionaryEntries;
 import com.example.android.tian_tian.utilities.Helper;
+import com.example.android.tian_tian.utilities.SwitchButton;
 import com.example.android.tian_tian.utilities.WordAdapter;
 import com.example.android.tian_tian.others.WordSelectedEvent;
 import com.example.android.tian_tian.data.PushDbContract;
@@ -73,6 +78,9 @@ public class VocabularyFragment extends Fragment {
 
     }
 
+    SwitchButton toLearnFilterItem;
+    SwitchButton learningFilterItem;
+    SwitchButton reviewingFilterItem;
     View emptyView;
     boolean search = false;
     ListView listView;
@@ -89,6 +97,8 @@ public class VocabularyFragment extends Fragment {
     EditText searchInput;
     View noResults;
     FloatingActionButton addNewWordButton;
+
+    float lastTouchDownX;
 
     public VocabularyFragment() {
         // Required empty public constructor
@@ -140,10 +150,9 @@ public class VocabularyFragment extends Fragment {
 
             public Cursor runQuery(CharSequence querry) {
                 Cursor queryCursor;
-                Log.d("runQuerry", "runQuery constraint:"+querry);
                 PushDbHelper pushDbHelper = new PushDbHelper(getContext());
                 if (querry != null) {
-                    queryCursor = getContext().getContentResolver().query(PushDbContract.Vocabulary.CONTENT_URI, projection,
+                    Cursor userDeckCursor = getContext().getContentResolver().query(PushDbContract.Vocabulary.CONTENT_URI, projection,
                              "INSTR(" + PushDbContract.Vocabulary.COLUMN_HEAD_WORD + ", ?) > 0 OR INSTR(" +
                                      PushDbContract.Vocabulary.COLUMN_TRANSLATION + ", ?) > 0 OR INSTR(" +
                                      PushDbContract.Vocabulary.COLUMN_PRONUNCIATION_SEARCHABLE + ", ?) > 0"
@@ -152,8 +161,39 @@ public class VocabularyFragment extends Fragment {
                                     querry.toString(),
                                     withoutNumbersAndSpaces(querry.toString())
                             }, PushDbContract.Vocabulary.COLUMN_ID + " DESC");
+
+                    final DictionaryEntries dictionaryEntries = new DictionaryEntries(getContext());
+                    Cursor dictionaryCursor = dictionaryEntries.getCursor(querry.toString());
+                    Cursor[] cursorList = new Cursor[2];
+                    cursorList[0] = userDeckCursor;
+                    cursorList[1] = dictionaryCursor;
+
+                    queryCursor = new MergeCursor(cursorList);
+                    // querry the other database and merge cursors
                 } else {
-                    queryCursor = getCursor();
+                    boolean atLeastOneActive = false;
+                    String selectString = "";
+                    if (toLearnFilterItem.getActive()) {
+                        selectString = "(" + PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE + " == " + Word.TO_PRESENT + ")";
+                        atLeastOneActive = true;
+                    }
+                    if (learningFilterItem.getActive()) {
+                        if (atLeastOneActive) {
+                            selectString += " OR ";
+                        }
+                        selectString += "(" + PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE + " > " + Word.TO_PRESENT +
+                                " AND " + PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE + " < " + Word.LEARNED + ")";
+                        atLeastOneActive = true;
+                    }
+                    if (reviewingFilterItem.getActive()) {
+                        if (atLeastOneActive) {
+                            selectString += " OR ";
+                        }
+                        selectString += "(" + PushDbContract.Vocabulary.COLUMN_LEARNING_STAGE + " >= " + Word.LEARNED + ")";
+                        atLeastOneActive = true;
+                    }
+                    queryCursor = getContext().getContentResolver().query(PushDbContract.Vocabulary.CONTENT_URI, projection,
+                                selectString, null, PushDbContract.Vocabulary.COLUMN_ID + " DESC");
                 }
                 final int cursorQty = queryCursor.getCount();
                 getActivity().runOnUiThread(new Runnable() {
@@ -170,6 +210,36 @@ public class VocabularyFragment extends Fragment {
             }
         });
         final ConstraintLayout headerView = (ConstraintLayout) inflater.inflate(R.layout.vocabulary_list_header, null);
+
+        final TextView toLearnFilterItemView = (TextView) headerView.findViewById(R.id.to_learn_filter_item);
+        toLearnFilterItem = new SwitchButton(getContext(), toLearnFilterItemView, false);
+        toLearnFilterItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toLearnFilterItem.toggle();
+                itemsAdapter.getFilter().filter(null);
+            }
+        });
+
+        final TextView learningFilterItemView = (TextView) headerView.findViewById(R.id.learning_filter_item);
+        learningFilterItem = new SwitchButton(getContext(), learningFilterItemView, false);
+        learningFilterItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                learningFilterItem.toggle();
+                itemsAdapter.getFilter().filter(null);
+            }
+        });
+
+        final TextView reviewingFilterItemView = (TextView) headerView.findViewById(R.id.reviewing_filter_item);
+        reviewingFilterItem = new SwitchButton(getContext(), reviewingFilterItemView, false);
+        reviewingFilterItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reviewingFilterItem.toggle();
+                itemsAdapter.getFilter().filter(null);
+            }
+        });
 
         scrollToTopButton = (FloatingActionButton) rootView.findViewById(R.id.scroll_to_top);
         scrollToTopButton.setOnClickListener(new View.OnClickListener() {
@@ -202,10 +272,7 @@ public class VocabularyFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence != null && !charSequence.toString().trim().isEmpty()) {
-//                    Toast.makeText(getContext(), charSequence + "|Hola", Toast.LENGTH_SHORT).show();
-                    itemsAdapter.getFilter().filter(charSequence);
-                }
+                itemsAdapter.getFilter().filter(charSequence);
             }
 
             @Override
@@ -214,26 +281,51 @@ public class VocabularyFragment extends Fragment {
 
         final View searchIcon = headerView.findViewById(R.id.search_icon);
         final View searchLabel = headerView.findViewById(R.id.search_label);
+        final View filterButton = headerView.findViewById(R.id.filter_vocabulary);
+        final View filterLabels = headerView.findViewById(R.id.filter_labels);
 
+        headerView.findViewById(R.id.search_vocabulary).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                // save the X,Y coordinates
+                if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                    lastTouchDownX = motionEvent.getX();
+                }
+
+                // let the touch event pass on to whoever needs it
+                return false;
+            }
+        });
         headerView.findViewById(R.id.search_vocabulary).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!search) {
+                    if (lastTouchDownX < (view.getWidth() / 2)) {
+                        searchInput.setVisibility(View.VISIBLE);
+                    } else {
+                        filterLabels.setVisibility(View.VISIBLE);
+                    }
+                    filterButton.setVisibility(View.GONE);
                     searchIcon.setVisibility(View.GONE);
                     searchLabel.setVisibility(View.GONE);
-                    searchInput.setVisibility(View.VISIBLE);
                     cancelSearchIcon.setVisibility(View.VISIBLE);
                     searchInput.setFocusableInTouchMode(true);
                     searchInput.requestFocus();
                     ((KeboardHandler) getContext()).openKeyboard(searchInput);
                     search = true;
                 } else {
+                    toLearnFilterItem.setUnselected();
+                    learningFilterItem.setUnselected();
+                    reviewingFilterItem.setUnselected();
+
                     searchInput.setText("");
                     itemsAdapter.getFilter().filter("");
                     cancelSearchIcon.setVisibility(View.GONE);
+                    filterLabels.setVisibility(View.GONE);
                     searchInput.setVisibility(View.GONE);
                     searchLabel.setVisibility(View.VISIBLE);
                     searchIcon.setVisibility(View.VISIBLE);
+                    filterButton.setVisibility(View.VISIBLE);
                     ((KeboardHandler) getContext()).closeKeyboard();
                     search = false;
                 }
@@ -241,17 +333,17 @@ public class VocabularyFragment extends Fragment {
         });
 
         listView.addHeaderView(headerView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View clickedItem, int position, long l) {
-                Cursor audio_cursor = getCursor(l);
-                audio_cursor.moveToFirst();
-                Word clickedWord = Word.from_cursor(audio_cursor);
-
-                EventBus.getDefault().post(new WordSelectedEvent(clickedWord));
-                ((Listener) getActivity()).onWordSelected(clickedWord);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View clickedItem, int position, long l) {
+//                Cursor audio_cursor = getCursor(l);
+//                audio_cursor.moveToFirst();
+//                Word clickedWord = Word.from_cursor(audio_cursor);
+//
+//                EventBus.getDefault().post(new WordSelectedEvent(clickedWord));
+//                ((Listener) getActivity()).onWordSelected(clickedWord);
+//            }
+//        });
 
         listView.setAdapter(itemsAdapter);
         return rootView;

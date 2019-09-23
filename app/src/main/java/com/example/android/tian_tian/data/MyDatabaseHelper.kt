@@ -71,6 +71,6 @@ class MyDatabaseHelper(val context: Context) : SQLiteOpenHelper(context, DATABAS
     companion object {
         const val ASSETS_PATH = "databases"
         const val DATABASE_NAME = "dictionary"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
     }
 }

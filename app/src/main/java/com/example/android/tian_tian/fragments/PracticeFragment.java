@@ -11,8 +11,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,10 +22,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.example.android.tian_tian.BusEvents.StatsUpdate;
 import com.example.android.tian_tian.R;
 import com.example.android.tian_tian.activities.AddNewWord;
 import com.example.android.tian_tian.expandable_section.ExpandableSection;
 import com.example.android.tian_tian.utilities.FloatingMenu;
+import com.example.android.tian_tian.utilities.Helper;
 import com.example.android.tian_tian.utilities.SRScheduler;
 import com.example.android.tian_tian.utilities.WordPracticeBoard;
 import com.example.android.tian_tian.others.WordSelectedEvent;
@@ -140,6 +142,28 @@ public class PracticeFragment extends Fragment {
             }
         });
 
+        floatingMenu.setOnSkipedListener(new FloatingMenu.OnSkipedListener() {
+            @Override
+            public void onSkiped() {
+//                  This would be more neat but is not being called
+//                practiceScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+//                    @Override
+//                    public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+//                        if (i == 0) {
+//                            practiceAnotherWord();
+//                        }
+//                    }
+//                });
+                practiceScrollView.smoothScrollTo(0,0);
+                CountDownTimer timer = new CountDownTimer(500, 100) {
+                        public void onTick(long millisUntilFinished) {}
+
+                        public void onFinish() { practiceAnotherWord(); }
+                    }.start();
+                practiceScrollView.setOnScrollChangeListener(null);
+            }
+        });
+
         floatingMenu.setOnDifficultySelectedListener(new FloatingMenu.OnDifficultySelectedListener() {
             @Override
             public void onDifficultySelectedDiffered(int difficulty) {
@@ -194,6 +218,7 @@ public class PracticeFragment extends Fragment {
             File imageFile = new File(currentWord.getImageURI());
             if (imageFile.exists()) imageFile.delete();
             EventBus.getDefault().post(new Integer(0));
+            EventBus.getDefault().post(new StatsUpdate());
             practiceAnotherWord();
         }
     }
@@ -210,36 +235,36 @@ public class PracticeFragment extends Fragment {
             optionsPanel.setVisibility(View.VISIBLE);
             floatingMenu.show();
             floatingMenu.collapse(false);
+            boolean isNotTimeToPractice = false;
             if (word.getStage() == Word.TO_PRESENT) floatingMenu.setState(FloatingMenu.STATE.NEW_WORD);
-            else floatingMenu.setState(FloatingMenu.STATE.EXPAND);
+            else {
+                if (word.getScheduledTo() <= Helper.daysSinceEpoch()) floatingMenu.setState(FloatingMenu.STATE.EXPAND);
+                else  {
+                    floatingMenu.setState(FloatingMenu.STATE.SKIP);
+                    isNotTimeToPractice = true;
+                }
+            }
             PreferenceManager.getDefaultSharedPreferences(getContext())
                     .edit().putLong("practicingWordId",word.getId()).apply();
-
-            if (currentWord != null) Log.w("tt", "" + currentWord.getId());
-            Log.w("ttl", "" + word.getId());
-//            if (currentWord != null && (currentWord.getId().equals(word.getId()))) {
-//                wordCardFront.changeWord(currentWord, animated);
-//                return;
-//            }
 
             currentWord = word;
             if (animated) {
                 wordCardBack.show();
                 if (isFirstOne) {
-                    wordCardBack.changeWord(currentWord, false);
+                    wordCardBack.changeWord(currentWord, false, isNotTimeToPractice);
                     wordCardFront.exitScreen(null);
                 } else {
                     wordCardFront.show();
                     LinearLayout container = wordCardBack.getContainer();
                     wordCardFront.setContainer(container);
-                    wordCardBack.changeWord(currentWord, false);
+                    wordCardBack.changeWord(currentWord, false, isNotTimeToPractice);
                     wordCardFront.exitScreen(null);
                 }
                 isFirstOne = false;
             } else {
                 isFirstOne = true;
                 wordCardFront.show();
-                wordCardFront.changeWord(currentWord, false);
+                wordCardFront.changeWord(currentWord, false, isNotTimeToPractice);
                 wordCardBack.hide();
             }
         } else {
@@ -251,7 +276,7 @@ public class PracticeFragment extends Fragment {
             floatingMenu.hide();
             preferences.edit().remove("practicingWordId").apply();
             isFirstOne = true;
-
+            setNewDayPoolingTimer();
         }
     }
 
@@ -260,5 +285,27 @@ public class PracticeFragment extends Fragment {
         Log.w("REFRESH", "deataching");
         Picasso.get().invalidate(new File(currentWord.getImageURI()));
         init(rootView);
+    }
+
+    private void newDayPooling() {
+        if (scheduler.checkForNewDay()) {
+            if (newDayPoolingTimer != null)
+                newDayPoolingTimer.cancel();
+            practiceAnotherWord();
+        }
+    }
+
+    private CountDownTimer newDayPoolingTimer = null;
+
+    private CountDownTimer setNewDayPoolingTimer() {
+        newDayPoolingTimer = new CountDownTimer(1 * 30 * 24  * 60 * 60 * 1000, 10 * 1000) {
+            public void onTick(long millisUntilFinished) {
+                newDayPooling();
+            }
+
+            public void onFinish() {}
+        }.start();
+        return newDayPoolingTimer;
+
     }
 }

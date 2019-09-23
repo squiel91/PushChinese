@@ -13,6 +13,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.example.android.tian_tian.utilities.Helper.listFromStringCursor;
+import static com.example.android.tian_tian.utilities.Helper.withoutNumbersAndSpaces;
+
 public class DictionaryEntries {
     Context context;
 
@@ -52,39 +55,41 @@ public class DictionaryEntries {
         return ints;
     }
 
-    public Pair<Word[], String[]> getWord(String query) {
+    public Cursor getCursor(String querry) {
+        Cursor cursor = getPrepopulatedDb().query("dictionary", null,
+                "INSTR(_ID, ?) > 0 OR INSTR(translations, ?) > 0 OR INSTR(pronunciation_searchable, ?) > 0",
+                new String[] {
+                        querry.toString(),
+                        querry.toString(),
+                        withoutNumbersAndSpaces(querry.toString())
+                }, null, null,
+                "length(_ID) ASC");
+        return cursor;
+    }
+
+    public Word[] getWord(String query) {
         Cursor cursor = getPrepopulatedDb().query("dictionary", null,
                 PushDbContract.Vocabulary.COLUMN_ID+ " = ?",
                 new String[] { query },
                 null, null, null);
-        if (cursor.getCount() == 0) return new Pair<>(null, new String[0]);
-        try {
-            cursor.moveToFirst();
-            final int data_index = cursor.getColumnIndexOrThrow("data");
-            String json_string = cursor.getString(data_index);
-            JSONObject json_root = new JSONObject(json_string);
-
-            JSONArray json_words = json_root.getJSONArray("words");
-            String[] examples = jsonArrayToStringArray(json_root.optJSONArray("examples"));
-            Word[] possibleWords = new Word[json_words.length()];
-            for (int i = 0; i < json_words.length(); i++) {
-                JSONObject json_word = json_words.getJSONObject(i);
-                Word word = new Word(
-                        null,
-                        query,
-                        json_word.getString("p"),
-                        jsonArrayToStringArray(json_word.getJSONArray("t")),
-                        jsonArrayToStringArray(json_word.optJSONArray("m")),
-                        null,
-                        null,
-                        false,
-                        false);
-                possibleWords[i] = word;
-            }
-            return new Pair<>(possibleWords, examples.length > 0? examples : new String[0]);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return new Pair<>(null, new String[0]);
+        if (cursor.getCount() == 0) return null;
+        final String sep = "·";
+        Word[] possibleWords = new Word[cursor.getCount()];
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.moveToNext();
+            Word newWord = new Word(
+                    (long) 0,
+                    cursor.getString(cursor.getColumnIndexOrThrow("_ID")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("pronunciation")),
+                    listFromStringCursor(cursor, "translations", sep),
+                    listFromStringCursor(cursor, "measures", sep),
+                    listFromStringCursor(cursor, "examples", sep),
+                    0,
+                    false,
+                    false
+            );
+            possibleWords[i] = newWord;
         }
+        return possibleWords;
     }
 }

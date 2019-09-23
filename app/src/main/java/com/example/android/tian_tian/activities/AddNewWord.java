@@ -35,6 +35,7 @@ import androidx.core.content.ContextCompat;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.example.android.tian_tian.BusEvents.StatsUpdate;
 import com.example.android.tian_tian.R;
 import com.example.android.tian_tian.data.DictionaryEntries;
 import com.example.android.tian_tian.entities.Word;
@@ -204,7 +205,7 @@ public class AddNewWord  extends AppCompatActivity {
         if (wordToEdit != null) {
             wordId = wordToEdit.getId();
             hanziEditText.setText(wordToEdit.getHeadWord());
-            preloadWord(wordToEdit, wordToEdit.getExamples(false));
+            preloadWord(wordToEdit);
         } else {
             wordId = getId();
             addRow(translationContainer, false);
@@ -263,9 +264,7 @@ public class AddNewWord  extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String query = s.toString();
-                Pair<Word[], String[]> pair = dictionaryEntries.getWord(query);
-                Word[] possibleWords = pair.first;
-                final String[] examples = pair.second;
+                Word[] possibleWords =  dictionaryEntries.getWord(query);
                 possiblePronunciations.removeAllViews();
                 lastPronunciationActive = null;
                 if ((possibleWords != null) && (possibleWords.length > 0)) {
@@ -277,12 +276,12 @@ public class AddNewWord  extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 Word word = (Word) view.getTag();
-                                preloadWord(word, examples);
+                                preloadWord(word);
                                 setActiveState((TextView) view);
                             }
                         });
                         if (wi == 0) {
-                            preloadWord(possibleWords[wi], examples);
+                            preloadWord(possibleWords[wi]);
                             setActiveState(button);
                         }
                     }
@@ -291,7 +290,7 @@ public class AddNewWord  extends AppCompatActivity {
         });
     }
 
-    private void preloadWord(Word word, String[] examples) {
+    private void preloadWord(Word word) {
         if (word.hasImage()) {
             imageBitmap = BitmapFactory.decodeFile(Word.getImageURI(wordId));
             processBitmap();
@@ -316,8 +315,8 @@ public class AddNewWord  extends AppCompatActivity {
             }
         }
         removeAllRows(examplesContainer);
-        if (examples != null) {
-            for (String example : examples) {
+        if (word.getExamples() != null) {
+            for (String example : word.getExamples()) {
                 addRow(examplesContainer, example, false);
             }
         }
@@ -415,8 +414,7 @@ public class AddNewWord  extends AppCompatActivity {
         String pronunciation = pronunciationEditText.getText().toString();
         String characters = ((EditText) findViewById(R.id.characters_edit_text)).getText().toString();
 
-        String fileName = "image_" + wordId + ".png";
-        if (!saveBitmap(imageBitmap, fileName)) return;
+        if (!saveBitmap(imageBitmap, Word.getImageURI(wordId))) return;
 
         if (voiceRecorder.hasAudio()) {
             try {
@@ -441,6 +439,7 @@ public class AddNewWord  extends AppCompatActivity {
             );
             word.store(this);
             EventBus.getDefault().post(new Integer(0));
+            EventBus.getDefault().post(new StatsUpdate());
         } else {
             word = wordToEdit;
             word.setHeadWord(characters);
@@ -453,6 +452,7 @@ public class AddNewWord  extends AppCompatActivity {
             word.update(this);
             EventBus.getDefault().post(new Float(0));
         }
+
         Toast.makeText(this, "Word saved", Toast.LENGTH_SHORT).show();
         this.finish();
     }
@@ -475,8 +475,7 @@ public class AddNewWord  extends AppCompatActivity {
             }
             FileOutputStream fOut;
             try {
-                fOut = new FileOutputStream(Environment.getExternalStorageDirectory().getAbsolutePath() +
-                        "/" + fileName, false);
+                fOut = new FileOutputStream(fileName, false);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
                 fOut.flush();
                 fOut.close();

@@ -45,7 +45,10 @@ import static com.example.android.tian_tian.data.PushProvider.LOG_TAG;
 public class WordPracticeBoard {
     Word word = null;
     public ViewGroup card;
+
+    ExpandableSection audioSection;
     MediaPlayer mediaPlayer;
+    MaterialIconView audioIcon;
     FragmentManager supportFragmentManager;
     ExpandableSection.OnLockedClick onLockedClick = null;
 
@@ -78,8 +81,6 @@ public class WordPracticeBoard {
         YoYo.with(Techniques.FadeIn).duration(0).playOn(card);
 
     }
-
-
 
     public LinearLayout getContainer() {
         LinearLayout container = (LinearLayout) card.getChildAt(0);
@@ -114,6 +115,7 @@ public class WordPracticeBoard {
     }
 
     public void unlockSections() {
+        if (!audioSection.isExpanded()) playAudioIfExists();
         for (ExpandableSection wordSection : wordSections) {
             wordSection.setLock(false);
         }
@@ -160,6 +162,10 @@ public class WordPracticeBoard {
     }
 
     public  ArrayList<ExpandableSection> expandWord(final Word word, final boolean animated) {
+        return expandWord(word, animated, false);
+    }
+
+    public  ArrayList<ExpandableSection> expandWord(final Word word, final boolean animated, boolean forceExpanded) {
         ArrayList<ExpandableSection> sections = new ArrayList<>();
         LinearLayout innerWord = new LinearLayout(context);
 
@@ -179,7 +185,6 @@ public class WordPracticeBoard {
         sections.add(headWordSection);
         innerWord.addView(headWordSection);
 
-        ExpandableSection audioSection = null;
         if (word.hasAudio()) {
             LinearLayout audioContainer = new LinearLayout(context);
             audioContainer.setGravity(Gravity.CENTER_VERTICAL);
@@ -189,7 +194,7 @@ public class WordPracticeBoard {
             pronunciationTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
             audioContainer.addView(pronunciationTextView);
 
-            final MaterialIconView audioIcon = new MaterialIconView(context);
+            audioIcon = new MaterialIconView(context);
             audioIcon.setIcon(MaterialDrawableBuilder.IconValue.MUSIC_NOTE);
             audioIcon.setToActionbarSize();
             audioIcon.setSizeDp(30);
@@ -204,7 +209,6 @@ public class WordPracticeBoard {
 
             String myUri = word.getAudioURI();
             try{
-
                 mediaPlayer = new MediaPlayer();
                 mediaPlayer.setDataSource(myUri);
                 mediaPlayer.prepare();
@@ -215,11 +219,7 @@ public class WordPracticeBoard {
             audioContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    YoYo.with(Techniques.Pulse)
-                            .duration(500)
-                            .repeat(2)
-                            .playOn(audioIcon);
-                    mediaPlayer.start();
+                    playAudioIfExists();
                 }
             });
 
@@ -227,6 +227,8 @@ public class WordPracticeBoard {
             innerWord.addView(audioSection);
             sections.add(audioSection);
         } else {
+            mediaPlayer = null;
+            audioIcon = null;
             audioSection = new ExpandableSection(context, "Pronunciation", Helper.toPinyin(word.getPronunciation()), false, 30);
             innerWord.addView(audioSection);
             sections.add(audioSection);
@@ -303,16 +305,16 @@ public class WordPracticeBoard {
         layoutParams.width = MATCH_PARENT;
         footer.setLayoutParams(layoutParams);
 
-        if (word.getStage() == Word.TO_PRESENT) {
+        if (word.getStage() == Word.TO_PRESENT || forceExpanded) {
             if (imageSection != null) imageSection.expand(animated);
             headWordSection.expand(animated);
             if (audioSection != null) audioSection.expand(animated);
             if (translationsSection != null) translationsSection.expand(animated);
+            playAudioIfExists();
         } else {
             int recall_test;
             if (word.getStage() < Word.LEARNED) recall_test = word.getStage();
             else {
-                recall_test = Word.SHOW_HEAD_WORD;
                 ArrayList<Integer> possibleWords = word.getPossibleStages();
                 recall_test =  possibleWords.get((new Random()).nextInt(possibleWords.size()));
             }
@@ -325,6 +327,7 @@ public class WordPracticeBoard {
                 case Word.SHOW_PRONUNCIATION:
                     headWordSection.setLock(true);
                     audioSection.expand(animated);
+                    if (mediaPlayer != null) playAudioIfExists();
                     translationsSection.expand(animated);
                     break;
                 case Word.SHOW_TRANSLATION:
@@ -342,6 +345,7 @@ public class WordPracticeBoard {
                     if (imageSection != null) imageSection.expand(animated);
                     headWordSection.setLock(true);
                     if (audioSection != null) audioSection.expand(animated);
+                    playAudioIfExists();
                     if (translationsSection != null) translationsSection.expand(animated);
             }
         }
@@ -378,12 +382,8 @@ public class WordPracticeBoard {
         toCollapse--;
         if (toCollapse == 0) {
             word = null;
-            changeWord(newWord);
+            changeWord(newWord, true, false);
         }
-    }
-
-    void changeWord(Word word) {
-        changeWord(word, true);
     }
 
     public void emptyPractice() {
@@ -392,13 +392,21 @@ public class WordPracticeBoard {
         inflator.inflate(R.layout.empty_practice, card, true);
     }
 
-    public void changeWord(Word word, boolean animated) {
+    public void changeWord(Word word, boolean animated, boolean forceExpanded) {
         if ((!animated) || (this.word == null)) {
             card.removeAllViews();
-            wordSections = expandWord(word, animated);
+            wordSections = expandWord(word, animated, forceExpanded);
             this.word = word;
         } else {
             collapseWord(word);
         }
+    }
+
+    public void playAudioIfExists() {
+        if (audioIcon != null) YoYo.with(Techniques.Pulse)
+                .duration(500)
+                .repeat(2)
+                .playOn(audioIcon);
+        if (mediaPlayer != null) mediaPlayer.start();
     }
 }
